@@ -1,12 +1,40 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+# Hotel Booking React App
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+A hotel booking web application featuring booking details, language switching, and payment methods.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Features
+
+- Display hotel details with images, description, and available services.
+- Complete booking system allowing selection of rooms, nights, and dates.
+- Language switcher between Arabic and English using `react-i18next`.
+- Payment options: Visa or Pay on Arrival.
+- User login required to make a booking.
+- State management with **Zustand**.
+- API requests handled with **Axios** to a fake JSON server.
+- Responsive and modern UI styled with **Tailwind CSS**.
+- JSON Server as a mock backend to store hotels and bookings data.
+
+---
+
+## Technologies Used
+
+- React.js
+- Zustand (State Management)
+- Tailwind CSS
+- Axios
+- react-router-dom
+- react-i18next
+- JSON Server (Mock REST API)
+
+---
+
+## Getting Started
+
+1. **Install dependencies:**
+
+```bash
+npm install
