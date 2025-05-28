@@ -13,6 +13,7 @@ import Register from './pages/register';
 import Login from './pages/login';
 import Booking from './pages/booking';
 import Payment from './pages/payment';
+import Footer from './components/footer';
 
 function App() {
   return (
@@ -36,6 +37,8 @@ function App() {
 
 
       </Routes>
+    
+    <Footer/>
     </>
   );
 }
