@@ -1,16 +1,32 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 
 export default function About() {
+  const [animate, setAnimate] = useState(false);
+
+useEffect(() => {
+  const timer = setTimeout(() => {
+    setAnimate(true);
+  }, 50); // تأخير بسيط عشان الحركة تشتغل
+
+  return () => clearTimeout(timer);
+}, []);
+
   return (
-    <div  dir="rtl" className=" mx-auto px-6 py-10 mt-20 max-w-4xl text-black">
+    <div
+      dir="rtl"
+      className={`mx-auto px-6 py-10 mt-20 max-w-4xl text-black transition-transform duration-500 ease-out ${
+        animate ? "translate-y-0 opacity-100" : "-translate-y-40 opacity-0"
+      }`}
+      style={{ willChange: "transform, opacity" }}
+    >
       <header className="text-center mb-16">
         <p className="text-3xl font-extrabold leading-relaxed">
           نحن هنا لتقديم أفضل تجربة حجز للفنادق والرحلات الجوية
         </p>
       </header>
 
-      <section className=" mb-14">
+      <section className="mb-14">
         <h2 className="flex items-center text-2xl font-bold mb-4">
           <FaCheckCircle className="text-green-600 mr-3" />
           مهمتنا
@@ -22,7 +38,7 @@ export default function About() {
         </p>
       </section>
 
-      <section className=" mb-14">
+      <section className="mb-14">
         <h2 className="flex items-center text-2xl font-bold mb-6">
           <FaCheckCircle className="text-green-600 mr-3" />
           قيمنا
@@ -38,7 +54,7 @@ export default function About() {
               أجل اتخاذ قرارات سفر مدروسة.
             </p>
           </div>
-          <div >
+          <div>
             <h3 className="text-xl font-bold mb-2 flex items-center text-black">
               <FaCheckCircle className="text-green-600 mr-2" />
               الابتكار
@@ -61,21 +77,21 @@ export default function About() {
         </div>
       </section>
 
-      <section className=" mb-14">
+      <section className="mb-14">
         <h2 className="flex items-center text-2xl font-bold mb-6">
           <FaCheckCircle className="text-green-600 mr-3" />
           تعرف على فريقنا
         </h2>
-        <div className=" space-y-8 sm:space-y-0 sm:flex sm:justify-between">
-          <div className=" text-center max-w-xs mx-auto">
+        <div className="space-y-8 sm:space-y-0 sm:flex sm:justify-between">
+          <div className="text-center max-w-xs mx-auto">
             <h3 className="text-xl font-bold text-black mb-1">أحمد محمود</h3>
             <p className="text-gray-700">مؤسس ومدير المشروع</p>
           </div>
-          <div className=" text-center max-w-xs mx-auto">
+          <div className="text-center max-w-xs mx-auto">
             <h3 className="text-xl font-bold text-black mb-1">سارة أحمد</h3>
             <p className="text-gray-700">مديرة التسويق</p>
           </div>
-          <div className=" text-center max-w-xs mx-auto">
+          <div className="text-center max-w-xs mx-auto">
             <h3 className="text-xl font-bold text-black mb-1">محمد علي</h3>
             <p className="text-gray-700">مطور ويب</p>
           </div>

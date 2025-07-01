@@ -14,6 +14,7 @@ import Login from './pages/login';
 import Booking from './pages/booking';
 import Payment from './pages/payment';
 import Footer from './components/footer';
+import NotFound from './pages/notfound';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
         <Route path='/register' element={<Register/>}/>
         <Route path='login' element={<Login/>}/>
         <Route path='/payment' element={<Payment/>}/>
+        <Route path="*" element={<NotFound />} />
 
 
       </Routes>

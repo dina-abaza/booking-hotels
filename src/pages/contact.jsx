@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FiPhone } from 'react-icons/fi';
-
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +11,16 @@ const Contact = () => {
   });
 
   const [status, setStatus] = useState("");
+  const [animate, setAnimate] = useState(false);
+
+  useEffect(() => {
+    
+    const timer = setTimeout(() => {
+      setAnimate(true);
+    }, 50);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -35,11 +44,18 @@ const Contact = () => {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto mt-16">
+   <div
+  className={`p-6 max-w-4xl mx-auto mt-16 transition-transform duration-700 ease-in-out ${
+    animate ? "translate-y-0 opacity-100" : "-translate-y-20 opacity-0"
+  }`}
+  style={{ willChange: "transform, opacity" }}
+  dir="rtl"
+>
+
       <h2 className="text-3xl font-bold mb-6 text-center flex items-center justify-center gap-2 text-black">
         <FiPhone className="text-green-500" size={28} />
-        تواصل معنا</h2>
-
+        تواصل معنا
+      </h2>
 
       <form
         onSubmit={handleSubmit}
@@ -92,7 +108,6 @@ const Contact = () => {
         )}
       </form>
 
-
       <div className="mt-10">
         <h3 className="text-xl font-semibold mb-2">معلومات التواصل المباشر</h3>
         <div className="bg-gray-100 p-4 rounded-md shadow-sm space-y-2">
@@ -109,7 +124,6 @@ const Contact = () => {
         </div>
       </div>
 
-    
       <div className="mt-10">
         <h3 className="text-xl font-semibold mb-2">موقعنا على الخريطة</h3>
         <div className="w-full h-96 rounded overflow-hidden shadow-lg">

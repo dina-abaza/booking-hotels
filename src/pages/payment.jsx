@@ -11,17 +11,21 @@ export default function Payment() {
   const [cardName, setCardName] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [animate, setAnimate] = useState(false);  // هنا
 
   useEffect(() => {
-
     const pendingBooking = localStorage.getItem("pendingBooking");
     if (pendingBooking) {
       setBooking(JSON.parse(pendingBooking));
     } else {
-      
       navigate("/");
     }
   }, [navigate]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setAnimate(true), 50);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handlePayment = async () => {
     if (!cardNumber || !expiryDate || !cvv || !cardName) {
@@ -29,22 +33,19 @@ export default function Payment() {
       return;
     }
 
-    
     if (cardNumber.length !== 16) {
       setError("رقم البطاقة غير صحيح.");
       return;
     }
 
     setError("");
-    
+
     try {
-      
       await axios.post("http://localhost:4000/bookings", booking);
 
       setMessage("تم الدفع بنجاح! شكراً لحجزك.");
       localStorage.removeItem("pendingBooking");
-        navigate("/");
-     
+      navigate("/");
     } catch (err) {
       setMessage("حدث خطأ أثناء الدفع. حاول مرة أخرى.");
       console.error(err);
@@ -54,10 +55,16 @@ export default function Payment() {
   if (!booking) return null;
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white shadow rounded mt-16">
+    <div
+      className={`max-w-md mx-auto p-6 bg-white shadow rounded mt-16 transition-transform duration-700 ease-in-out ${
+        animate ? "translate-y-0 opacity-100" : "-translate-y-40 opacity-0"
+      }`}
+      style={{ willChange: "transform, opacity" }}
+      dir="rtl"
+    >
       <h2 className="text-xl font-bold mb-4 text-blue-500">تفاصيل الدفع</h2>
 
-      <p>حجز الفندق: <strong className="text-blue-500">{booking. hotelName}</strong></p>
+      <p>حجز الفندق: <strong className="text-blue-500">{booking.hotelName}</strong></p>
       <p>عدد الغرف: {booking.rooms}</p>
       <p>عدد الليالي: {booking.nights}</p>
       <p>السعر الإجمالي: <strong className="text-blue-500">{booking.totalPrice} ج.م</strong></p>

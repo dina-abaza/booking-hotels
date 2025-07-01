@@ -4,7 +4,7 @@ import axios from "axios";
 import useAuthStore from "../store/authStore";
 
 export default function Booking() {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const navigate = useNavigate();
   const [hotel, setHotel] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -17,6 +17,7 @@ export default function Booking() {
   const [showPopup, setShowPopup] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("visa");
   const [error, setError] = useState("");
+  const [animate, setAnimate] = useState(false);
 
   const user = useAuthStore((state) => state.user);
 
@@ -26,6 +27,11 @@ export default function Booking() {
         const res = await axios.get(`http://localhost:4000/hotels/${id}`);
         setHotel(res.data);
         setLoading(false);
+
+        // شغل الأنيميشن بعد التحميل
+        setTimeout(() => {
+          setAnimate(true);
+        }, 100); // تأخير بسيط لضمان عرض المكون
       } catch (error) {
         console.error("فشل تحميل بيانات الفندق:", error);
         setLoading(false);
@@ -52,10 +58,10 @@ export default function Booking() {
     setShowPopup(true);
   };
 
- const confirmBooking = async () => {
+  const confirmBooking = async () => {
     const bookingData = {
       hotelId: hotel.id,
-      hotelName: hotel.name, 
+      hotelName: hotel.name,
       user: user ? user.email || user.name : "guest",
       rooms,
       guests,
@@ -82,14 +88,25 @@ export default function Booking() {
     }
   };
 
-  if (loading) return <div className="text-center mt-10">جارٍ تحميل بيانات الفندق...</div>;
+  if (loading)
+    return <div className="text-center mt-10">جارٍ تحميل بيانات الفندق...</div>;
 
-  if (!hotel) return <div className="text-center mt-10">لم يتم العثور على الفندق.</div>;
+  if (!hotel)
+    return <div className="text-center mt-10">لم يتم العثور على الفندق.</div>;
 
   return (
-    <div className="max-w-xl mx-auto p-4 mt-20">
-      <h2 className="text-2xl font-bold mb-4 text-blue-600">حجز الفندق: {hotel.name}</h2>
+    <div
+      dir="rtl"
+      className={`max-w-xl mx-auto p-4 mt-20 overflow-hidden transition duration-1000 ease-in-out ${
+        animate ? "translate-y-0 opacity-100" : "-translate-y-96 opacity-0"
+      }`}
+      style={{ willChange: "transform, opacity" }}
+    >
+      <h2 className="text-2xl font-bold mb-4 text-blue-600">
+        حجز الفندق: {hotel.name}
+      </h2>
 
+      {/* باقي الكود كما هو */}
       <div className="mb-3">
         <label>عدد الغرف:</label>
         <input
@@ -152,21 +169,16 @@ export default function Booking() {
         احجز
       </button>
 
-    
       {message && (
-        <p className="text-center text-green-600 font-semibold my-4">
-          {message}
-        </p>
+        <p className="text-center text-green-600 font-semibold my-4">{message}</p>
       )}
 
-    
       {showPopup && (
-     <div className="fixed inset-0 bg-transparent backdrop-brightness-75 flex justify-center items-center z-50">
-        <div className="bg-white p-6 rounded shadow-lg max-w-md w-full">
+        <div className="fixed inset-0 bg-transparent backdrop-brightness-75 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded shadow-lg max-w-md w-full">
             <h3 className="text-xl font-semibold mb-4">مراجعة الحجز</h3>
             <p>
-              السعر الإجمالي:{" "}
-              <span className="font-bold">{totalPrice} ج.م</span>
+              السعر الإجمالي: <span className="font-bold">{totalPrice} ج.م</span>
             </p>
 
             <div className="mt-4">

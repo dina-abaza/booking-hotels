@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
@@ -12,6 +13,7 @@ const SearchPage = () => {
   const [hotels, setHotels] = useState([]);
   const [filteredHotels, setFilteredHotels] = useState([]);
   const [sortBy, setSortBy] = useState("");
+  const [animate, setAnimate] = useState(false); // أضفنا هنا
 
   useEffect(() => {
     const hotelsFromStorage = localStorage.getItem("hotels");
@@ -48,8 +50,20 @@ const SearchPage = () => {
     setFilteredHotels(filtered);
   }, [city, hotels, sortBy]);
 
+  // نفعّل الحركة بعد تحميل الصفحة
+  useEffect(() => {
+    const timer = setTimeout(() => setAnimate(true), 50);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="p-4 mt-14">
+    <div
+      className={`p-4 mt-14 transition-transform duration-700 ease-in-out ${
+        animate ? "translate-y-0 opacity-100" : "-translate-y-40 opacity-0"
+      }`}
+      style={{ willChange: "transform, opacity" }}
+      dir="rtl"
+    >
       <h2 className="text-xl font-bold mb-4">نتائج البحث لـ: {city}</h2>
 
       <div className="mb-4">

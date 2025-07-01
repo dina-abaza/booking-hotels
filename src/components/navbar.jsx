@@ -153,7 +153,7 @@ const Navbar = () => {
           {isLoggedIn ? (
             <button
               onClick={handleLogout}
-              className="flex items-center gap-1 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+              className="flex items-center gap-1 bg-red-500 text-white px-3 py-1 rounded-2xl hover:bg-red-600 transition"
             >
               <FaSignOutAlt />
               {t("logout")}
@@ -162,7 +162,7 @@ const Navbar = () => {
             <>
               <Link
                 to="/register"
-                className="block bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition"
+                className="block bg-green-500 text-white px-3 py-1 rounded-2xl hover:bg-green-600 transition"
               >
                 {t("create_account")}
               </Link>

@@ -9,7 +9,7 @@ import {
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-white pt-8 pb-4 mt-10">
+    <footer className="bg-gray-900 text-white pt-8 pb-4 mt-10 mb-2">
       <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6">
 
         
