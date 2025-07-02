@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import HotelCard from "../components/hotelcard";
-import TypingTitle from "../components/typingTitle"; // أو أي مسار حسب مكانها
+import TypingTitle from "../components/typingTitle";
 
 const Home = () => {
   const [city, setCity] = useState("");
@@ -71,9 +71,9 @@ useEffect(() => {
   return (
     <div  className={`p-4 mt-20 ${animate ? "page-enter-active" : "page-enter"}`}
     >
-     
-    <div className="relative flex flex-col bg-cover bg-center p-4 h-screen" style={{ backgroundImage: 'url(/bg.jpg)' }}>
-     <TypingTitle />
+      <div className="relative flex flex-col items-center bg-cover bg-center p-4 min-h-[110vh]" style={{ backgroundImage: 'url(/bg.jpg)' }}>
+
+          <TypingTitle />
 
 
   <div className="absolute top-1/3 right-1/2 translate-1/2 flex flex-col md:flex md:flex-row justify-center items-center gap-2 mb-4">
