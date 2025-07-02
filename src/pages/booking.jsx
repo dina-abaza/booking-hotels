@@ -24,14 +24,14 @@ export default function Booking() {
   useEffect(() => {
     const fetchHotel = async () => {
       try {
-        const res = await axios.get(`http://localhost:4000/hotels/${id}`);
+        const res = await axios.get(`http://192.168.1.9:4000/hotels/${id}`);
         setHotel(res.data);
         setLoading(false);
 
-        // شغل الأنيميشن بعد التحميل
+      
         setTimeout(() => {
           setAnimate(true);
-        }, 100); // تأخير بسيط لضمان عرض المكون
+        }, 100);
       } catch (error) {
         console.error("فشل تحميل بيانات الفندق:", error);
         setLoading(false);

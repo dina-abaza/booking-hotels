@@ -127,9 +127,9 @@ const Navbar = () => {
     
       {isMenuOpen && (
           <div className="flex flex-col items-center gap-3">
-            <Link to="/about" className="px-3 py-1 rounded-2xl hover:bg-black/10 transition duration-300">{t("about")}</Link>
-            <Link to="/contact" className="px-3 py-1 rounded-2xl hover:bg-black/10 transition duration-300">{t("contact")}</Link>
-            <Link to="/flights" className="px-3 py-1 rounded-2xl hover:bg-black/10 transition duration-300">{t("flights")}</Link>
+            <Link to="/about" className="px-3 py-1 rounded-2xl hover:bg-black/10 transition duration-300" onClick={()=>setIsMenuOpen(false)}>{t("about")}</Link>
+            <Link to="/contact" className="px-3 py-1 rounded-2xl hover:bg-black/10 transition duration-300"onClick={()=>setIsMenuOpen(false)}>{t("contact")}</Link>
+            <Link to="/flights" className="px-3 py-1 rounded-2xl hover:bg-black/10 transition duration-300"onClick={()=>setIsMenuOpen(false)}>{t("flights")}</Link>
           <select
             value={i18n.language}
             onChange={(e) => handleLanguageChange(e.target.value)}

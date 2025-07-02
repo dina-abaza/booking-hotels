@@ -41,7 +41,7 @@ export default function Payment() {
     setError("");
 
     try {
-      await axios.post("http://localhost:4000/bookings", booking);
+      await axios.post("http://192.168.1.9:4000/bookings", booking);
 
       setMessage("تم الدفع بنجاح! شكراً لحجزك.");
       localStorage.removeItem("pendingBooking");

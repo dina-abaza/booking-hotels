@@ -13,7 +13,7 @@ const SearchPage = () => {
   const [hotels, setHotels] = useState([]);
   const [filteredHotels, setFilteredHotels] = useState([]);
   const [sortBy, setSortBy] = useState("");
-  const [animate, setAnimate] = useState(false); // أضفنا هنا
+  const [animate, setAnimate] = useState(false); 
 
   useEffect(() => {
     const hotelsFromStorage = localStorage.getItem("hotels");
@@ -50,7 +50,7 @@ const SearchPage = () => {
     setFilteredHotels(filtered);
   }, [city, hotels, sortBy]);
 
-  // نفعّل الحركة بعد تحميل الصفحة
+
   useEffect(() => {
     const timer = setTimeout(() => setAnimate(true), 50);
     return () => clearTimeout(timer);

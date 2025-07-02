@@ -25,7 +25,7 @@ const Home = () => {
   if (hotelsFromStorage) {
     setHotels(JSON.parse(hotelsFromStorage));
   } else {
-    axios.get("http://localhost:4000/hotels")
+    axios.get("http://192.168.1.9:4000/hotels")
       .then((res) => {
         setHotels(res.data);
         localStorage.setItem("hotels", JSON.stringify(res.data));
@@ -71,7 +71,7 @@ useEffect(() => {
   return (
     <div  className={`p-4 mt-20 ${animate ? "page-enter-active" : "page-enter"}`}
     >
-      <div className="relative flex flex-col items-center bg-cover bg-center p-4 min-h-[110vh]" style={{ backgroundImage: 'url(/bg.jpg)' }}>
+      <div className="relative flex flex-col items-center bg-cover bg-center p-4 min-h-[110vh]" style={{ backgroundImage: 'url(/beach.jpeg)' }}>
 
           <TypingTitle />
 
@@ -87,18 +87,7 @@ useEffect(() => {
     >
       
     </input>
-    <input
-      type="date"
-      value={checkIn}
-      onChange={(e) => setCheckIn(e.target.value)}
-      className="outline-none px-3 py-2 rounded-2xl sm:w-auto bg-blue-50"
-    />
-    <input
-      type="date"
-      value={checkOut}
-      onChange={(e) => setCheckOut(e.target.value)}
-      className="outline-none px-3 py-2 rounded-2xl sm:w-auto bg-blue-50"
-    />
+ 
     <input
       type="number"
       value={rooms}
@@ -113,6 +102,20 @@ useEffect(() => {
       onChange={(e) => setGuests(e.target.value)}
       className="outline-none px-3 py-2 rounded-2xl sm:w-auto bg-blue-50"
     />
+
+       <input
+      type="date"
+      value={checkIn}
+      onChange={(e) => setCheckIn(e.target.value)}
+      className="outline-none px-3 py-2 rounded-2xl sm:w-auto bg-blue-50"
+    />
+    <input
+      type="date"
+      value={checkOut}
+      onChange={(e) => setCheckOut(e.target.value)}
+      className="outline-none px-3 py-2 rounded-2xl sm:w-auto bg-blue-50"
+    />
+
   </div>
        <div className="mb-4 absolute top-10 right-10 bg-blue-50 rounded-b-lg">
           <select

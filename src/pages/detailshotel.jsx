@@ -18,7 +18,7 @@ export default function Details() {
     } else {
       const fetchHotel = async () => {
         try {
-          const res = await axios.get(`http://localhost:4000/hotels/${id}`);
+          const res = await axios.get(`http://192.168.1.9:4000/hotels/${id}`);
           setHotel(res.data);
           setLoading(false);
           localStorage.setItem(`hotel-${id}`, JSON.stringify(res.data));

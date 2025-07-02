@@ -22,7 +22,7 @@ export default function Login() {
 
     try {
       const res = await axios.get(
-        `http://localhost:4000/users?email=${email}&password=${password}`
+        `http://192.168.1.9:4000/users?email=${email}&password=${password}`
       );
 
       if (res.data.length > 0) {

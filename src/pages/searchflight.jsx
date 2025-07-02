@@ -26,7 +26,7 @@ const FlightResults = () => {
     } else {
       async function fetchData() {
         try {
-          const res = await axios.get("http://localhost:4000/flights");
+          const res = await axios.get("http://192.168.1.9:4000/flights");
           setFlights(res.data);
           localStorage.setItem("flightData", JSON.stringify(res.data));
         } catch (err) {
