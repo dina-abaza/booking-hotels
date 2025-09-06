@@ -27,7 +27,7 @@ const HotelCard = ({ hotel }) => {
         </div>
 
         <Link
-          to={`/hotel/${hotel.id}`}
+          to={`/hotel/${hotel._id}`}
           className="block mt-4 text-center bg-blue-700 text-white hover:bg-blue-500 py-2 rounded"
         >
           View Details

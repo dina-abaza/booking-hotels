@@ -25,7 +25,7 @@ const Home = () => {
   if (hotelsFromStorage) {
     setHotels(JSON.parse(hotelsFromStorage));
   } else {
-    axios.get("http://192.168.1.9:4000/hotels")
+    axios.get("https://booking-hotels-back-end-api.vercel.app/api/hotels")
       .then((res) => {
         setHotels(res.data);
         localStorage.setItem("hotels", JSON.stringify(res.data));
@@ -141,7 +141,7 @@ useEffect(() => {
       <h2 className="text-xl font-bold mt-32">Available Hotels</h2>
       <div className="grid grid-cols-1 mt-5 md:grid-cols-3 gap-4">
         {sortedHotels.map((hotel) => (
-          <HotelCard key={hotel.id} hotel={hotel} />
+          <HotelCard key={hotel._id} hotel={hotel} />
         ))}
       </div>
     </div>

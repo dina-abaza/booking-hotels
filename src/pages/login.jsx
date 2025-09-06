@@ -21,13 +21,19 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const res = await axios.get(
-        `http://192.168.1.9:4000/users?email=${email}&password=${password}`
+      const res = await axios.post(
+        `http://localhost:3000/api/Auth/login`, {
+          email,
+          password,
+        },
+        {
+          withCredentials: true
+        }
       );
 
-      if (res.data.length > 0) {
-        const user = res.data[0];
-        login(user);
+    //   console.log(res.data);
+      if (res.data) {
+        login("welcome");
         setMessage("✅ تم تسجيل الدخول بنجاح!");
         setTimeout(() => {
           navigate("/");

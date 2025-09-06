@@ -19,7 +19,7 @@ export default function Register() {
     e.preventDefault();
 
     try {
-      await axios.post("http://192.168.1.9:4000/users", {
+      await axios.post("http://localhost:3000/api/Auth/register", {
         email,
         password,
       });

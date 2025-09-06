@@ -24,11 +24,9 @@ export default function Booking() {
   useEffect(() => {
     const fetchHotel = async () => {
       try {
-        const res = await axios.get(`http://192.168.1.9:4000/hotels/${id}`);
+        const res = await axios.get(`https://booking-hotels-back-end-api.vercel.app/api/hotels/${id}`);
         setHotel(res.data);
         setLoading(false);
-
-      
         setTimeout(() => {
           setAnimate(true);
         }, 100);
@@ -58,11 +56,17 @@ export default function Booking() {
     setShowPopup(true);
   };
 
+if(hotel){
+
+    // console.log(hotel)
+}
+// console.log(hotel.name)
+
   const confirmBooking = async () => {
+    console.log(hotel)
     const bookingData = {
-      hotelId: hotel.id,
-      hotelName: hotel.name,
-      user: user ? user.email || user.name : "guest",
+      hotelId: hotel._id,
+    //   hotelName: hotel.name,
       rooms,
       guests,
       nights,
@@ -71,15 +75,24 @@ export default function Booking() {
       paymentMethod,
       totalPrice,
     };
+    console.log(bookingData)
 
     if (paymentMethod === "visa") {
       localStorage.setItem("pendingBooking", JSON.stringify(bookingData));
       navigate("/payment");
     } else {
       try {
-        await axios.post("http://localhost:4000/bookings", bookingData);
+       const res = await axios.post("http://localhost:3000/api/Booking",
+            bookingData
+         ,
+          {
+            withCredentials: true,
+          }
+        
+        );
         setMessage("✅ تم الحجز بنجاح. يرجى التواصل مع الفندق لتأكيد الحجز.");
         setShowPopup(false);
+        console.log(res.data)
         navigate("/");
       } catch (error) {
         setMessage("❌ حدث خطأ أثناء الحجز. حاول مرة أخرى.");
