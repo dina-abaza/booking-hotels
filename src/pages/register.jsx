@@ -19,7 +19,7 @@ export default function Register() {
     e.preventDefault();
 
     try {
-      await axios.post("http://192.168.1.9:4000/users", {
+      await axios.post("https://booking-hotels-back-end-api.vercel.app/api/Auth/register", {
         email,
         password,
       });
@@ -30,7 +30,7 @@ export default function Register() {
 
       navigate("/login");
     } catch (error) {
-      console.error("حدث خطأ أثناء التسجيل:", error);
+      console.error("حدث خطأ أثناء التسجيل:",  error.response ? error.response.data.message : error.message);
       setMessage("❌ حدث خطأ أثناء التسجيل. حاول مرة أخرى.");
     }
   };

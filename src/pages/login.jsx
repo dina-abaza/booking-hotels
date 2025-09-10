@@ -3,14 +3,15 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/authStore";
 
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [animate, setAnimate] = useState(false);
   const navigate = useNavigate();
+ const login = useAuthStore((state) => state.login);
 
-  const { login } = useAuthStore();
 
   useEffect(() => {
     const timer = setTimeout(() => setAnimate(true), 50);
@@ -21,22 +22,21 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const res = await axios.get(
-        `http://192.168.1.9:4000/users?email=${email}&password=${password}`
-      );
-
-      if (res.data.length > 0) {
-        const user = res.data[0];
-        login(user);
-        setMessage("✅ تم تسجيل الدخول بنجاح!");
-        setTimeout(() => {
+      const response = await axios.post('https://booking-hotels-back-end-api.vercel.app/api/Auth/login', {
+      email,
+      password,
+    }, {
+      withCredentials: true, //مهم لإرسال واستقبال الكوك يز
+    })
+    console.log("Response:", response.data);
+    login(response.data.user);
+     setMessage("✅ تم تسجيل الدخول بنجاح!");
+     setTimeout(() => {
           navigate("/");
         }, 1000);
-      } else {
-        setMessage("❌ بيانات الدخول غير صحيحة.");
-      }
+   
     } catch (error) {
-      console.error("فشل تسجيل الدخول:", error);
+      console.error("فشل تسجيل الدخول:",  error.response ? error.response.data.message : error.message);
       setMessage("❌ حدث خطأ أثناء تسجيل الدخول.");
     }
   };

@@ -24,7 +24,7 @@ export default function Booking() {
   useEffect(() => {
     const fetchHotel = async () => {
       try {
-        const res = await axios.get(`http://192.168.1.9:4000/hotels/${id}`);
+        const res = await axios.get(`https://booking-hotels-back-end-api.vercel.app/api/hotels/${id}`);
         setHotel(res.data);
         setLoading(false);
 

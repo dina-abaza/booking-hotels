@@ -18,7 +18,6 @@ import useAuthStore from "../store/authStore";
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
-  const user = useAuthStore((state) => state.user);
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const logout = useAuthStore((state) => state.logout);
   const navigate = useNavigate();
@@ -91,7 +90,7 @@ const Navbar = () => {
           {isLoggedIn && (
             <span className="hidden lg:flex items-center gap-1 font-semibold text-transparent bg-clip-text bg-gradient-to-r from-gray-700 via-sky-500 to-blue-300">
               <FaUserCircle />
-              {t("welcome")} {user.name || user.email}
+              {t("welcome")}
             </span>
           )}
 

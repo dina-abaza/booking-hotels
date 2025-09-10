@@ -11,25 +11,21 @@ export default function Details() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const hotelFromStorage = localStorage.getItem(`hotel-${id}`);
-    if (hotelFromStorage) {
-      setHotel(JSON.parse(hotelFromStorage));
-      setLoading(false);
-    } else {
+    
       const fetchHotel = async () => {
         try {
-          const res = await axios.get(`http://192.168.1.9:4000/hotels/${id}`);
+          const res = await axios.get(`https://booking-hotels-back-end-api.vercel.app/api/hotels/${id}`);
           setHotel(res.data);
           setLoading(false);
-          localStorage.setItem(`hotel-${id}`, JSON.stringify(res.data));
+       
         } catch (error) {
-          console.error("Failed to fetch hotel:", error);
+          console.error("Failed to fetch hotel:", error.response ? error.response.data.message : error.message);
           setLoading(false);
         }
       };
       fetchHotel();
     }
-  }, [id]);
+  , [id]);
 
   useEffect(() => {
     if (!loading) {
