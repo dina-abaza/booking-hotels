@@ -1,8 +1,10 @@
-
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 const TypingTitle = () => {
-  const fullText = "استمتع بالاسترخاء";
+  const { t } = useTranslation("home");
+  const fullText = t("typing_title"); // 👈 النص من الترجمة
+
   const [displayedText, setDisplayedText] = useState("");
 
   useEffect(() => {
@@ -14,15 +16,15 @@ const TypingTitle = () => {
     }, 150);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [fullText]);
 
   return (
     <h1
       className={`
         text-white font-bold text-center
-        text-lg mt-32
-        sm:text-xl sm:mt-20
-        md:text-2xl md:mt-24
+        text-base mt-24        /* 📱 موبايل: أصغر فونت + يطلع لفوق شوية */
+        sm:text-lg sm:mt-20    /* 📱 شاشة أكبر شوية */
+        md:text-2xl md:mt-24   /* 💻 لابتوب: يفضل زي ما هو */
         transition-all duration-500
       `}
     >

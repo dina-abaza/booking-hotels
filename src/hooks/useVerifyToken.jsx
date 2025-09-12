@@ -24,7 +24,7 @@ export default function UseVerifyToken() {
             withCredentials: true
           });
 
-          await axios.post('https://booking-hotels-back-end-api.vercel.app/api/Auth/veryfayToken', {
+          await axios.post('https://booking-hotels-back-end-api.vercel.app/api/Auth/veryfayToken',{},{
             withCredentials: true
           });
 

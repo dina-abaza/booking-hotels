@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { FiPhone } from 'react-icons/fi';
+import { FiPhone } from "react-icons/fi";
+import { toast } from "react-toastify";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -14,7 +15,6 @@ const Contact = () => {
   const [animate, setAnimate] = useState(false);
 
   useEffect(() => {
-    
     const timer = setTimeout(() => {
       setAnimate(true);
     }, 50);
@@ -34,32 +34,37 @@ const Contact = () => {
     setStatus("جاري الإرسال...");
 
     try {
-      await axios.post("http://localhost:4000/contact", formData);
-      setStatus(" تم إرسال رسالتك بنجاح");
+      const response = await axios.post(
+        "https://booking-hotels-back-end-api.vercel.app/api/contact",
+        formData,
+        { withCredentials: true }
+      );
+      toast.success("✅ تم إرسال رسالتك بنجاح");
+      console.log("Message sent successfully:", response.data.message);
       setFormData({ name: "", email: "", subject: "", message: "" });
     } catch (error) {
-      console.error(error);
-      setStatus(" حدث خطأ أثناء الإرسال");
+      console.error(error.response ? error.response.data.error : error.message);
+      toast.error("❌ حدث خطأ أثناء الإرسال");
     }
   };
 
   return (
-   <div
-  className={`p-6 max-w-4xl mx-auto mt-16 transition-transform duration-700 ease-in-out ${
-    animate ? "translate-y-0 opacity-100" : "-translate-y-20 opacity-0"
-  }`}
-  style={{ willChange: "transform, opacity" }}
-  dir="rtl"
->
-
+    <div
+      className={`p-6 max-w-4xl mx-auto mt-16 transition-transform duration-700 ease-in-out ${
+        animate ? "translate-y-0 opacity-100" : "-translate-y-20 opacity-0"
+      }`}
+      style={{ willChange: "transform, opacity" }}
+      dir="rtl"
+    >
       <h2 className="text-3xl font-bold mb-6 text-center flex items-center justify-center gap-2 text-black">
-        <FiPhone className="text-green-500" size={28} />
+        {/* أيقونة التليفون مع أنيميشن */}
+        <FiPhone className="text-green-500 phone-ring" size={28} />
         تواصل معنا
       </h2>
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-4 bg-white p-6 rounded-lg shadow-md"
+        className="space-y-4 bg-white p-6 rounded-lg shadow-md w-[90%] md:w-[70%] lg:w-[60%] mx-auto"
       >
         <input
           type="text"
@@ -68,7 +73,7 @@ const Contact = () => {
           value={formData.name}
           onChange={handleChange}
           required
-          className="w-full border px-4 py-2 rounded"
+          className="w-full border-b border-r rounded-full border-green-600 px-2 py-2 focus:outline-none"
         />
         <input
           type="email"
@@ -77,7 +82,7 @@ const Contact = () => {
           value={formData.email}
           onChange={handleChange}
           required
-          className="w-full border px-4 py-2 rounded"
+          className="w-full border-b border-r rounded-full border-green-600 px-2 py-2 focus:outline-none"
         />
         <input
           type="text"
@@ -85,7 +90,7 @@ const Contact = () => {
           placeholder="الموضوع"
           value={formData.subject}
           onChange={handleChange}
-          className="w-full border px-4 py-2 rounded"
+          className="w-full border-b border-r rounded-full border-green-600 px-2 py-2 focus:outline-none"
         />
         <textarea
           name="message"
@@ -93,15 +98,17 @@ const Contact = () => {
           value={formData.message}
           onChange={handleChange}
           required
-          className="w-full border px-4 py-2 rounded h-32 resize-none"
+          className="w-full border-b border-r border-green-600 px-2 py-2 focus:outline-none h-32 resize-none"
         ></textarea>
 
-        <button
-          type="submit"
-          className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600"
-        >
-          إرسال
-        </button>
+        <div className="flex justify-center">
+          <button
+            type="submit"
+            className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition"
+          >
+            إرسال
+          </button>
+        </div>
 
         {status && (
           <p className="mt-4 text-center text-sm text-gray-600">{status}</p>

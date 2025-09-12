@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import UseVerifyToken from "../hooks/useVerifyToken";
 
 export default function Payment() {
+  UseVerifyToken();
   const navigate = useNavigate();
   const [booking, setBooking] = useState(null);
   const [cardNumber, setCardNumber] = useState("");
@@ -28,29 +30,45 @@ export default function Payment() {
   }, []);
 
   const handlePayment = async () => {
-    if (!cardNumber || !expiryDate || !cvv || !cardName) {
-      setError("يرجى ملء جميع بيانات البطاقة.");
-      return;
-    }
+  if (!cardNumber || !expiryDate || !cvv || !cardName) {
+    setError("يرجى ملء جميع بيانات البطاقة.");
+    return;
+  }
 
-    if (cardNumber.length !== 16) {
-      setError("رقم البطاقة غير صحيح.");
-      return;
-    }
+  if (cardNumber.length !== 16) {
+    setError("رقم البطاقة غير صحيح.");
+    return;
+  }
 
-    setError("");
+  setError("");
 
-    try {
-      await axios.post("http://192.168.1.9:4000/bookings", booking);
+  try {
+    const response = await axios.post(
+      "https://booking-hotels-back-end-api.vercel.app/api/Booking",
+      {
+        ...booking,
+        paymentMethod: "card", 
+      },
+      
+      { withCredentials: true }
+    );
 
+    if (response.data.checkoutUrl) {
+      // لو الـ API رجع لينك دفع (Stripe مثلاً) → ودي اليوزر عليه
+      window.location.href = response.data.checkoutUrl;
+    } else {
       setMessage("تم الدفع بنجاح! شكراً لحجزك.");
       localStorage.removeItem("pendingBooking");
       navigate("/");
-    } catch (err) {
-      setMessage("حدث خطأ أثناء الدفع. حاول مرة أخرى.");
-      console.error(err);
     }
-  };
+  } catch (err) {
+    setMessage(
+      err.response?.data?.message || "حدث خطأ أثناء الدفع. حاول مرة أخرى."
+    );
+    console.error(err);
+  }
+};
+
 
   if (!booking) return null;
 

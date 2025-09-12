@@ -7,19 +7,20 @@ import SearchPage from './pages/searchpage';
 import Details from './pages/detailshotel';
 import About from './pages/about';
 import Contact from './pages/contact';
-import FlightSearch from './pages/flight';
-import FlightResults from './pages/searchflight';
 import Register from './pages/register';
 import Login from './pages/login';
 import Booking from './pages/booking';
 import Payment from './pages/payment';
 import Footer from './components/footer';
 import NotFound from './pages/notfound';
+import ScrollToTop from './hooks/scroolToTop';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
     <>
-    
+    <ScrollToTop/>
       <Navbar />
       
     
@@ -29,8 +30,6 @@ function App() {
         <Route path="/hotel/:id" element={<Details />} />
         <Route path='/about' element={<About/>}/>
         <Route path='/contact' element={<Contact/>}/>
-        <Route path='/flights' element={<FlightSearch/>}/>
-        <Route path='/flights/search' element={<FlightResults/>}/>
         <Route path="/booking/:id" element={<Booking />} />
         <Route path='/register' element={<Register/>}/>
         <Route path='login' element={<Login/>}/>
@@ -41,6 +40,17 @@ function App() {
       </Routes>
     
     <Footer/>
+    <ToastContainer 
+  position="bottom-right"
+  autoClose={2000}   // يقفل بعد ثانيتين بدل 5 ثواني الافتراضي
+  hideProgressBar={false}
+  newestOnTop={false}
+  closeOnClick
+  rtl={true}         // بما إن المحتوى عربي يخليه RTL
+  pauseOnFocusLoss
+  draggable
+  pauseOnHover
+/>
     </>
   );
 }
