@@ -74,44 +74,47 @@ export default function Register() {
       </div>
 
       {/* القسم اليمين (الفورم) */}
-      <div
-        className={`flex-1 flex justify-center items-center transition-transform duration-700 ease-in-out ${
-          animate ? "translate-x-0 opacity-100" : "translate-x-40 opacity-0"
-        }`}
+      {/* القسم اليمين (الفورم) */}
+<div
+  className={`flex-1 flex justify-center items-center transition-transform duration-700 ease-in-out ${
+    animate ? "translate-x-0 opacity-100" : "translate-x-40 opacity-0"
+  }`}
+>
+  <div className="w-full max-w-lg p-6 sm:p-8 rounded-2xl shadow-lg bg-blue-900
+                  min-h-[60vh] sm:min-h-[70vh] md:min-h-[auto]">
+    <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center text-white">
+      إنشاء حساب
+    </h2>
+
+    <form onSubmit={handleRegister}>
+      <label className="block mb-2 text-white text-sm sm:text-base">البريد الإلكتروني</label>
+      <input
+        type="email"
+        className="w-11/12 sm:w-full p-2 sm:p-3 rounded-lg mb-4 bg-gray-100 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-400"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
+
+      <label className="block mb-2 text-white text-sm sm:text-base">كلمة المرور</label>
+      <input
+        type="password"
+        className="w-11/12 sm:w-full p-2 sm:p-3 rounded-lg mb-6 bg-gray-100 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-400"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
+
+      <button
+        type="submit"
+        className="w-11/12 sm:w-full py-2 sm:py-3 rounded-lg text-white font-bold bg-gradient-to-r from-orange-500 to-red-500 hover:opacity-90 transition"
       >
-        <div className="w-full max-w-lg p-8 rounded-2xl shadow-lg bg-blue-900">
-          <h2 className="text-3xl font-bold mb-6 text-center text-white">
-            إنشاء حساب
-          </h2>
+        إنشاء حساب
+      </button>
+    </form>
+  </div>
+</div>
 
-          <form onSubmit={handleRegister}>
-            <label className="block mb-2 text-white">البريد الإلكتروني</label>
-            <input
-              type="email"
-              className="w-full p-3 rounded-lg mb-4 bg-gray-100 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-400"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-
-            <label className="block mb-2 text-white">كلمة المرور</label>
-            <input
-              type="password"
-              className="w-full p-3 rounded-lg mb-6 bg-gray-100 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-400"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-
-            <button
-              type="submit"
-              className="w-full py-3 rounded-lg text-white font-bold bg-gradient-to-r from-orange-500 to-red-500 hover:opacity-90 transition"
-            >
-              إنشاء حساب
-            </button>
-          </form>
-        </div>
-      </div>
     </div>
   );
 }

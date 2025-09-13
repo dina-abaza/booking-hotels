@@ -17,7 +17,7 @@ export default function Booking() {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [showPopup, setShowPopup] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("visa");
+  const [paymentMethod, setPaymentMethod] = useState("card");
   const [error, setError] = useState("");
   const [animate, setAnimate] = useState(false);
   const [buttonAnimate, setButtonAnimate] = useState(false);
@@ -61,47 +61,67 @@ export default function Booking() {
     setShowPopup(true);
   };
 
-  const confirmBooking = () => {
-    const bookingData = {
-      hotelId: hotel._id,
-      rooms,
-      guests,
-      nights,
-      checkIn,
-      checkOut,
-      paymentMethod,
-      totalPrice,
-    };
+const confirmBooking = () => {
+  const bookingData = {
+    hotelId: hotel._id,
+    rooms,
+    guests,
+    nights,
+    checkIn,
+    checkOut,
+    paymentMethod,
+    totalPrice,
+  };
 
-    if (paymentMethod === "visa") {
-      localStorage.setItem("pendingBooking", JSON.stringify(bookingData));
-      navigate("/payment");
-      return;
-    }
-
+  if (paymentMethod === "card") {
+    // لو المستخدم اختار الدفع بالفيزا
     axios
       .post(
         "https://booking-hotels-back-end-api.vercel.app/api/Booking",
         bookingData,
         { withCredentials: true }
       )
-      .then(() => {
-        setMessage(
-          "✅ تم الحجز بنجاح. يرجى التواصل مع الفندق لتأكيد الحجز."
-        );
-        setShowPopup(false);
-        setTimeout(() => {
-          navigate("/");
-        }, 2000);
+      .then((res) => {
+        if (res.data.checkoutUrl) {
+          // تحويل المستخدم مباشرة على لينك الدفع
+          window.location.href = res.data.checkoutUrl;
+        } else {
+          setMessage("⚠️ لم يتم استلام رابط الدفع من السيرفر.");
+        }
       })
-      .catch((error) => {
-        console.error("خطأ أثناء الحجز:", error.response?.data || error.message);
+      .catch((err) => {
+        console.error("خطأ أثناء الدفع:", err.response?.data || err.message);
         setMessage(
-          error.response?.data?.message ||
-            "❌ حدث خطأ أثناء الحجز. حاول مرة أخرى."
+          err.response?.data?.message ||
+            "❌ حدث خطأ أثناء الدفع. حاول مرة أخرى."
         );
       });
-  };
+    return; // علشان مايكملش على الكاش
+  }
+
+  // في حالة الدفع كاش
+  axios
+    .post(
+      "https://booking-hotels-back-end-api.vercel.app/api/Booking",
+      bookingData,
+      { withCredentials: true }
+    )
+    .then(() => {
+      setMessage("✅ تم الحجز بنجاح. يرجى التواصل مع الفندق لتأكيد الحجز.");
+      setShowPopup(false);
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    })
+    .catch((error) => {
+      console.error("خطأ أثناء الحجز:", error.response?.data || error.message);
+      setMessage(
+        error.response?.data?.message ||
+          "❌ حدث خطأ أثناء الحجز. حاول مرة أخرى."
+      );
+    });
+};
+
 
   if (loading)
     return <div className="text-center mt-10">جارٍ تحميل بيانات الفندق...</div>;
@@ -206,7 +226,7 @@ export default function Booking() {
           onChange={(e) => setPaymentMethod(e.target.value)}
           className="border rounded px-2 py-2 w-full focus:border-blue-600"
         >
-          <option value="visa">فيزا</option>
+          <option value="card">فيزا</option>
           <option value="cash">الدفع عند الوصول</option>
         </select>
       </div>

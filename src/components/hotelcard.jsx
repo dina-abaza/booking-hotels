@@ -1,10 +1,36 @@
-import React from "react";
+
+import React, { useRef, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const HotelCard = ({ hotel }) => {
+  const cardRef = useRef();
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.unobserve(entry.target); // لما تظهر مرة واحدة فقط
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (cardRef.current) observer.observe(cardRef.current);
+
+    return () => {
+      if (cardRef.current) observer.unobserve(cardRef.current);
+    };
+  }, []);
+
   return (
     <div
-      className="rounded-2xl bg-white shadow-md overflow-hidden flex flex-col h-full transform transition duration-300 hover:scale-105 hover:shadow-2xl"
+      ref={cardRef}
+      className={`rounded-2xl bg-white shadow-md overflow-hidden flex flex-col h-full
+                  transform transition duration-700 ease-out
+                  ${visible ? "translate-x-0 opacity-100" : "translate-x-24 opacity-0"}
+                  hover:scale-105 hover:shadow-2xl`}
     >
       {/* صورة واحدة فقط */}
       <img

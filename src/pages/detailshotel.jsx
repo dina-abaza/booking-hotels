@@ -46,7 +46,7 @@ export default function Details() {
       style={{ willChange: "transform, opacity" }}
       dir="rtl"
     >
-      <h2 className="text-2xl font-bold mb-4">{hotel.name}</h2>
+      <h2 className="text-2xl font-bold mb-4 mt-10">{hotel.name}</h2>
       <p className="text-gray-600 mb-2">{hotel.city}</p>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
         {hotel.images && hotel.images.map((img, index) => (

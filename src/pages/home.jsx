@@ -75,7 +75,7 @@ const Home = () => {
       className={`p-4 mt-20 ${animate ? "page-enter-active" : "page-enter"}`}
     >
       <div
-        className="relative flex flex-col items-center bg-cover bg-center p-4 min-h-[110vh] "
+        className="relative flex flex-col items-center bg-cover bg-center p-4 min-h-[80vh] "
         style={{ backgroundImage: "url(/beach.jpeg)" }}
       >
         <TypingTitle />
@@ -108,7 +108,7 @@ const Home = () => {
         </div>
 
         {/* Sorting */}
-        <div className="mb-4 absolute top-10 right-10">
+        <div className="mb-4 absolute top-10 right-5 m:right-10">
           <select
             value={sortOption}
             onChange={(e) => setSortOption(e.target.value)}
@@ -124,7 +124,7 @@ const Home = () => {
       </div>
 
       {/* Hotels section */}
-      <h2 ref={hotelsRef} className="text-xl font-bold mt-32 text-center">
+      <h2 ref={hotelsRef} className="text-xl font-bold mt-20 text-center">
         {t("available_hotels")}
       </h2>
 

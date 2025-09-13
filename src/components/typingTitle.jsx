@@ -20,13 +20,14 @@ const TypingTitle = () => {
 
   return (
     <h1
-      className={`
-        text-white font-bold text-center
-        text-base mt-24        /* 📱 موبايل: أصغر فونت + يطلع لفوق شوية */
-        sm:text-lg sm:mt-20    /* 📱 شاشة أكبر شوية */
-        md:text-2xl md:mt-24   /* 💻 لابتوب: يفضل زي ما هو */
-        transition-all duration-500
-      `}
+   className={`
+    text-white font-bold text-center
+    text-lg mt-24      /* 📱 موبايل: بداية */
+    sm:text-xl sm:mt-24  /* 📱 تابلت: أكبر شوية */
+    md:text-2xl md:mt-24  /* 💻 لابتوب */
+    lg:text-3xl lg:mt-28   /* 🖥️ ديسكتوب */
+    transition-all duration-500
+  `}
     >
       {displayedText}
     </h1>

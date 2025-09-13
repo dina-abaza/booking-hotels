@@ -10,7 +10,6 @@ import Contact from './pages/contact';
 import Register from './pages/register';
 import Login from './pages/login';
 import Booking from './pages/booking';
-import Payment from './pages/payment';
 import Footer from './components/footer';
 import NotFound from './pages/notfound';
 import ScrollToTop from './hooks/scroolToTop';
@@ -19,7 +18,7 @@ import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
-    <>
+    <div className='min-h-screen overflow-x-hidden'>
     <ScrollToTop/>
       <Navbar />
       
@@ -33,7 +32,6 @@ function App() {
         <Route path="/booking/:id" element={<Booking />} />
         <Route path='/register' element={<Register/>}/>
         <Route path='login' element={<Login/>}/>
-        <Route path='/payment' element={<Payment/>}/>
         <Route path="*" element={<NotFound />} />
 
 
@@ -51,7 +49,7 @@ function App() {
   draggable
   pauseOnHover
 />
-    </>
+    </div>
   );
 }
 

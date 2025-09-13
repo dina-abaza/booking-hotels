@@ -44,48 +44,50 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-screen bg-white">
-      {/* الفورم */}
-      <div
-        className={`flex-1 flex justify-center items-center transition-transform duration-700 ease-in-out ${
-          animate ? "translate-x-0 opacity-100" : "translate-x-40 opacity-0"
-        }`}
-      >
-        <div className="w-full max-w-lg p-8 rounded-2xl shadow-lg bg-blue-900">
-          <h2 className="text-3xl font-bold mb-6 text-center text-white">
-            تسجيل الدخول
-          </h2>
+    <div className="flex min-h-screen bg-white"> {/* الفورم */}
+     {/* الفورم */}
+<div
+  className={`flex-1 flex justify-center items-center transition-transform duration-700 ease-in-out px-4 sm:px-0 ${
+    animate ? "translate-x-0 opacity-100" : "translate-x-40 opacity-0"
+  }`}
+>
+  <div className="w-full max-w-lg p-8 rounded-2xl shadow-lg bg-blue-900">
+    <h2 className="text-3xl font-bold mb-6 text-center text-white">
+      تسجيل الدخول
+    </h2>
 
-          <form onSubmit={handleLogin}>
-            <label className="block mb-2 text-white">البريد الإلكتروني</label>
-            <input
-              type="email"
-              className="w-full p-3 rounded-lg mb-4 bg-gray-100 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-400"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+    <form onSubmit={handleLogin}>
+      <label className="block mb-2 text-white">البريد الإلكتروني</label>
+      <input
+        type="email"
+        className="w-full p-3 rounded-lg mb-4 bg-gray-100 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-400"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
 
-            <label className="block mb-2 text-white">كلمة المرور</label>
-            <input
-              type="password"
-              className="w-full p-3 rounded-lg mb-6 bg-gray-100 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-400"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+      <label className="block mb-2 text-white">كلمة المرور</label>
+      <input
+        type="password"
+        className="w-full p-3 rounded-lg mb-6 bg-gray-100 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-400"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
 
-            <div className="flex justify-center">
-              <button
-                type="submit"
-                className="px-6 py-2 rounded-lg text-white font-bold bg-gradient-to-r from-orange-500 to-red-500 hover:opacity-90 transition"
-              >
-                تسجيل الدخول
-              </button>
-            </div>
-          </form>
-        </div>
+      <div className="flex justify-center">
+        <button
+          type="submit"
+          className="px-6 py-2 rounded-lg text-white font-bold bg-gradient-to-r from-orange-500 to-red-500 hover:opacity-90 transition"
+        >
+          تسجيل الدخول
+        </button>
       </div>
+    </form>
+  </div>
+</div>
+
+     
     </div>
   );
 }
