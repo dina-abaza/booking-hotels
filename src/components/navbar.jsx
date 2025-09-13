@@ -150,13 +150,6 @@ const Navbar = () => {
     >
       {t("contact")}
     </Link>
-    <Link
-      to="/flights"
-      className="px-3 py-1 rounded-full hover:bg-black/10 transition duration-300"
-      onClick={() => setIsMenuOpen(false)}
-    >
-      {t("flights")}
-    </Link>
 
     {/* Language Toggle Mobile */}
     <div
