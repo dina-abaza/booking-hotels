@@ -4,12 +4,12 @@ import {
   FaTimes,
   FaQuestionCircle,
   FaInfoCircle,
-  FaHotel,
   FaUser,
   FaSignInAlt,
   FaSignOutAlt,
   FaUserCircle,
 } from "react-icons/fa";
+import { HiSparkles } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import useAuthStore from "../store/authStore";
@@ -25,6 +25,7 @@ const Navbar = () => {
   const handleLogout = () => {
     logout();
     localStorage.removeItem("user");
+    setIsMenuOpen(false); // إغلاق القائمة بعد تسجيل الخروج
     navigate("/login");
   };
 
@@ -36,171 +37,125 @@ const Navbar = () => {
   };
 
   return (
-   <motion.nav
-  key={Date.now()}   // يضمن إن كل refresh يعيد الحركة
-  initial={{ y: -200, opacity: 0 }}
-  animate={{ y: 0, opacity: 1 }}
-  transition={{ duration: 1, ease: "easeOut" }}
-  className="w-full fixed top-0 left-0 bg-white shadow z-50"
->
-      <div className="max-w-7xl mx-auto flex justify-between items-center p-4">
+    <motion.nav
+      initial={{ y: -60, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.7 }}
+      className="fixed top-0 left-0 w-full z-50 bg-black shadow-2xl rounded-b-[3rem]"
+    >
+      <div className="max-w-7xl mx-auto px-6 pt-8 pb-12 flex justify-between items-center">
         {/* Logo */}
-        <Link
-          to="/"
-          className="flex items-center gap-2 text-2xl font-extrabold text-black"
-        >
-          <FaHotel className="text-yellow-500 animate-pulse" />
-          {t("home")}
+        <Link to="/" className="flex items-center gap-3">
+          <HiSparkles className="text-amber-500 text-2xl" />
+          <span
+            style={{
+              fontFamily: i18n.language === "ar" ? "Lalezar, cursive" : "Pacifico, cursive",
+            }}
+            className="text-4xl bg-gradient-to-r from-[#4a2f1a] via-[#b08a3e] to-[#f1d28a] bg-clip-text text-transparent"
+          >
+            {i18n.language === "ar" ? "ترافيللو" : "Travelio"}
+          </span>
         </Link>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Button */}
         <div className="md:hidden">
-          <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            {isMenuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="text-amber-400"
+          >
+            {isMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
           </button>
         </div>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-4">
-          <Link
-            to="/about"
-            className="flex items-center gap-1 text-black hover:bg-black/10 px-3 py-2 rounded-full"
-          >
+        <div className="hidden md:flex items-center gap-10">
+          <Link to="/about" className="flex items-center gap-2 text-[#e6c98f] hover:text-amber-400 transition">
             <FaInfoCircle /> {t("about")}
           </Link>
-          <Link
-            to="/contact"
-            className="flex items-center gap-1 text-black hover:bg-black/10 px-3 py-2 rounded-full"
-          >
+
+          <Link to="/contact" className="flex items-center gap-2 text-[#e6c98f] hover:text-amber-400 transition">
             <FaQuestionCircle /> {t("contact")}
           </Link>
 
           {/* Language Toggle */}
-          <div
-            onClick={toggleLanguage}
-            className="w-16 h-8 flex items-center bg-gray-200 rounded-full cursor-pointer p-1 transition"
-          >
-            <div
-              className={`w-6 h-6 rounded-full bg-blue-500 text-white text-xs flex items-center justify-center transition-transform duration-300 ${
-                i18n.language === "ar" ? "translate-x-0" : "translate-x-8"
-              }`}
-            >
+          <div onClick={toggleLanguage} className="w-14 h-7 bg-zinc-800 rounded-full p-1 cursor-pointer">
+            <div className={`w-5 h-5 bg-amber-400 text-black text-[10px] font-bold rounded-full flex items-center justify-center transition-transform ${i18n.language === "ar" ? "translate-x-0" : "translate-x-7"}`}>
               {i18n.language === "ar" ? "AR" : "EN"}
             </div>
           </div>
 
-          {/* Welcome + Auth */}
           {isLoggedIn && (
-            <span className="hidden lg:flex items-center gap-1 font-semibold text-transparent bg-clip-text bg-gradient-to-r from-gray-700 via-sky-500 to-blue-300">
-              <FaUserCircle />
-              {t("welcome")}
+            <span className="flex items-center gap-2 text-amber-300 font-semibold">
+              <FaUserCircle /> {t("welcome")}
             </span>
           )}
 
-      {isLoggedIn ? (
-  <button
-    onClick={handleLogout}
-    className="flex items-center gap-1 bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition"
-  >
-    <FaSignOutAlt />
-    {t("logout")}
-  </button>
-) : (
-  <>
-    <Link
-      to="/register"
-      className="flex items-center gap-1 bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 transition"
-    >
-      <FaUser />
-      {t("create_account")}
-    </Link>
-    <Link
-      to="/login"
-      className="flex items-center gap-1 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition"
-    >
-      <FaSignInAlt />
-      {t("login")}
-    </Link>
-  </>
-)}
-
+          {isLoggedIn ? (
+            <button onClick={handleLogout} className="flex items-center gap-2 border border-red-500 text-red-400 px-6 py-2 rounded-full hover:bg-red-500 hover:text-white transition">
+              <FaSignOutAlt /> {t("logout")}
+            </button>
+          ) : (
+            <div className="flex gap-4">
+              <Link to="/register" className="bg-gradient-to-r from-[#b08a3e] to-[#f1d28a] text-black px-6 py-2 rounded-full font-bold">
+                <FaUser />
+              </Link>
+              <Link to="/login" className="border border-amber-400 text-amber-300 px-6 py-2 rounded-full">
+                <FaSignInAlt />
+              </Link>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Mobile Menu Content */}
-  {/* Mobile Menu Content */}
-{isMenuOpen && (
-  <motion.div
-    initial={{ opacity: 0, y: -20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.4 }}
-    className="flex flex-col items-center gap-3 pb-4"
-  >
-    <Link
-      to="/about"
-      className="px-3 py-1 rounded-full hover:bg-black/10 transition duration-300"
-      onClick={() => setIsMenuOpen(false)}
-    >
-      {t("about")}
-    </Link>
-    <Link
-      to="/contact"
-      className="px-3 py-1 rounded-full hover:bg-black/10 transition duration-300"
-      onClick={() => setIsMenuOpen(false)}
-    >
-      {t("contact")}
-    </Link>
+      {/* Mobile Menu (تعديل هذا الجزء) */}
+      {isMenuOpen && (
+        <div className="md:hidden bg-black border-t border-amber-900/30 pb-10 pt-6 flex flex-col gap-6 items-center px-6">
+          <Link to="/about" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-2 text-[#e6c98f] text-lg">
+            <FaInfoCircle /> {t("about")}
+          </Link>
+          <Link to="/contact" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-2 text-[#e6c98f] text-lg">
+            <FaQuestionCircle /> {t("contact")}
+          </Link>
 
-    {/* Language Toggle Mobile */}
-    <div
-      onClick={() => {
-        toggleLanguage();
-        setIsMenuOpen(false);
-      }}
-      className="w-16 h-8 flex items-center bg-gray-200 rounded-full cursor-pointer p-1 transition"
-    >
-      <div
-        className={`w-6 h-6 rounded-full bg-blue-500 text-white text-xs flex items-center justify-center transition-transform duration-300 ${
-          i18n.language === "ar" ? "translate-x-0" : "translate-x-8"
-        }`}
-      >
-        {i18n.language === "ar" ? "AR" : "EN"}
-      </div>
-    </div>
+          {/* Language Toggle in Mobile */}
+          <div onClick={toggleLanguage} className="flex items-center gap-3 text-amber-400 cursor-pointer">
+             <span>{i18n.language === "ar" ? "English" : "العربية"}</span>
+          </div>
 
-    {/* Auth Mobile */}
-    {isLoggedIn ? (
-      <button
-        onClick={() => {
-          handleLogout();
-          setIsMenuOpen(false);
-        }}
-        className="flex items-center gap-1 bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition"
-      >
-        <FaSignOutAlt />
-        {t("logout")}
-      </button>
-    ) : (
-      <>
-        <Link
-          to="/register"
-          onClick={() => setIsMenuOpen(false)}
-          className="block bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 transition"
-        >
-          {t("create_account")}
-        </Link>
-        <Link
-          to="/login"
-          onClick={() => setIsMenuOpen(false)}
-          className="block bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition"
-        >
-          {t("login")}
-        </Link>
-      </>
-    )}
-  </motion.div>
-)}
+          <div className="w-full h-[1px] bg-amber-900/20 my-2"></div>
 
+          {isLoggedIn ? (
+            <div className="flex flex-col items-center gap-4 w-full">
+              <span className="flex items-center gap-2 text-amber-300 font-semibold">
+                <FaUserCircle /> {t("welcome")}
+              </span>
+              <button
+                onClick={handleLogout}
+                className="flex items-center justify-center gap-2 w-full border border-red-500 text-red-400 py-3 rounded-full"
+              >
+                <FaSignOutAlt /> {t("logout")}
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4 w-full">
+              <Link
+                to="/register"
+                onClick={() => setIsMenuOpen(false)}
+                className="flex items-center justify-center gap-2 bg-gradient-to-r from-[#b08a3e] to-[#f1d28a] text-black py-3 rounded-full font-bold"
+              >
+                <FaUser /> {t("register") || "إنشاء حساب"}
+              </Link>
+              <Link
+                to="/login"
+                onClick={() => setIsMenuOpen(false)}
+                className="flex items-center justify-center gap-2 border border-amber-400 text-amber-300 py-3 rounded-full"
+              >
+                <FaSignInAlt /> {t("login") || "دخول"}
+              </Link>
+            </div>
+          )}
+        </div>
+      )}
     </motion.nav>
   );
 };

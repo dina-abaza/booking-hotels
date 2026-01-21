@@ -16,27 +16,35 @@ export default function About() {
   const [displayText, setDisplayText] = useState("");
 
   useEffect(() => {
-    AOS.init({ duration: 1000, once: true });
+    AOS.init({ duration: 1200, once: true, easing: "ease-out-cubic" });
 
-    // تأثير الكتابة
     let i = 0;
     const interval = setInterval(() => {
       setDisplayText(fullText.slice(0, i + 1));
       i++;
       if (i === fullText.length) clearInterval(interval);
-    }, 100); // 100ms لكل حرف
+    }, 90);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div dir="rtl" className="mx-auto px-6 py-12 mt-20 max-w-6xl">
-      {/* العنوان الرئيسي */}
-      <header data-aos="fade-up" className="text-center mb-12">
-        <p className="text-3xl font-extrabold leading-relaxed text-gray-800">
+    <div
+      dir="rtl"
+      className="
+        mx-auto max-w-6xl px-6 py-16 mt-28
+        text-[#f5e6c8]
+      "
+    >
+      {/* العنوان */}
+      <header
+        data-aos="fade-up"
+        className="text-center "
+      >
+        <p className="text-4xl font-extrabold leading-relaxed bg-gradient-to-r from-[#a57c2f] via-[#c9a24d] to-[#e6c173] bg-clip-text text-transparent">
           {displayText}
         </p>
-        <p className="text-gray-600 mt-3 text-lg max-w-2xl mx-auto">
+        <p className="text-black mt-4 text-lg max-w-2xl mx-auto">
           من خلال منصتنا، أصبح بإمكانك استكشاف أفضل العروض، مقارنة الأسعار،
           واختيار الوجهة المثالية بسهولة تامة وفي دقائق معدودة.
         </p>
@@ -44,185 +52,150 @@ export default function About() {
 
       {/* فريقنا */}
       <section
-        data-aos="fade-left"
-        className="mb-12 bg-white shadow-sm rounded-2xl p-8"
+        data-aos="fade-up"
+        className="mb-16 bg-black/80 backdrop-blur rounded-3xl p-10 shadow-2xl border border-[#3a2a16]"
       >
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="flex items-center text-2xl font-bold text-gray-800">
-            <FaUsers className="text-blue-600 ml-3" />
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-10 gap-4">
+          <h2 className="flex items-center text-3xl font-bold text-[#f5d37b]">
+            <FaUsers className="ml-3 text-[#c9a24d]" />
             تعرف على فريقنا
           </h2>
-          <p className="text-gray-500 text-sm">
+          <p className="text-[#cbb893] text-sm max-w-md">
             فريق صغير متحمّس يركّز على بناء تجربة سفر بسيطة وممتازة
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-          {/* عضو 1 */}
-          <div
-            data-aos="zoom-in"
-            className="bg-gray-50 rounded-xl p-6 text-center shadow hover:scale-105 transition"
-          >
-            <img
-              src="/person3.jpg"
-              alt="أحمد محمود"
-              className="w-28 h-28 mx-auto rounded-full mb-4 object-cover"
-            />
-            <h3 className="text-xl font-semibold text-gray-800">أحمد محمود</h3>
-            <p className="text-sm text-gray-600 mt-1">مؤسس ومدير المشروع</p>
-            <p className="text-gray-600 mt-3 text-sm leading-relaxed">
-              يقود الاستراتيجية العامة ويشرف على التعاون مع الشركاء التجاريين
-              لضمان أفضل الصفقات للمستخدمين.
-            </p>
-            <div className="flex justify-center gap-4 mt-4 text-blue-600">
-              <a href="#" aria-label="Twitter أحمد">
-                <FaTwitter />
-              </a>
-              <a href="#" aria-label="LinkedIn أحمد">
-                <FaLinkedin />
-              </a>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
+          {[
+            {
+              img: "/person3.jpg",
+              name: "أحمد محمود",
+              role: "مؤسس ومدير المشروع",
+              desc:
+                "يقود الاستراتيجية العامة ويشرف على التعاون مع الشركاء التجاريين لضمان أفضل الصفقات.",
+            },
+            {
+              img: "/person2.jpg",
+              name: "سارة أحمد",
+              role: "مديرة التسويق",
+              desc:
+                "مسؤولة عن حملات النمو والتواصل مع العملاء وتطوير محتوى يعزّز ثقة العلامة.",
+            },
+            {
+              img: "/person.jpg",
+              name: "محمد علي",
+              role: "مطور ويب",
+              desc:
+                "يبني واجهات المستخدم ويضمن أداء عالي وتجربة استخدام سلسة.",
+            },
+          ].map((member, idx) => (
+            <div
+              key={idx}
+              data-aos="zoom-in"
+              className="
+                bg-gradient-to-b from-[#1a1a1a] to-black
+                rounded-2xl p-8 text-center
+                shadow-xl
+                hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(201,162,77,0.25)]
+                transition-all duration-500
+                border border-[#3a2a16]
+              "
+            >
+              <img
+                src={member.img}
+                alt={member.name}
+                className="w-28 h-28 mx-auto rounded-full mb-5 object-cover border-4 border-[#c9a24d]"
+              />
+              <h3 className="text-xl font-semibold text-[#f5d37b]">
+                {member.name}
+              </h3>
+              <p className="text-sm text-[#cbb893] mt-1">
+                {member.role}
+              </p>
+              <p className="text-[#d6c3a3] mt-4 text-sm leading-relaxed">
+                {member.desc}
+              </p>
+              <div className="flex justify-center gap-5 mt-5 text-[#c9a24d] text-lg">
+                <FaTwitter className="hover:text-[#f5d37b] transition" />
+                <FaLinkedin className="hover:text-[#f5d37b] transition" />
+              </div>
             </div>
-          </div>
-
-          {/* عضو 2 */}
-          <div
-            data-aos="zoom-in"
-            className="bg-gray-50 rounded-xl p-6 text-center shadow hover:scale-105 transition"
-          >
-            <img
-              src="/person2.jpg"
-              alt="سارة أحمد"
-              className="w-28 h-28 mx-auto rounded-full mb-4 object-cover"
-            />
-            <h3 className="text-xl font-semibold text-gray-800">سارة أحمد</h3>
-            <p className="text-sm text-gray-600 mt-1">مديرة التسويق</p>
-            <p className="text-gray-600 mt-3 text-sm leading-relaxed">
-              مسؤولة عن حملات النمو والتواصل مع العملاء، وتطوير محتوى يجذب
-              المسافرين ويعزّز ثقة العلامة.
-            </p>
-            <div className="flex justify-center gap-4 mt-4 text-blue-600">
-              <a href="#" aria-label="Twitter سارة">
-                <FaTwitter />
-              </a>
-              <a href="#" aria-label="LinkedIn سارة">
-                <FaLinkedin />
-              </a>
-            </div>
-          </div>
-
-          {/* عضو 3 */}
-          <div
-            data-aos="zoom-in"
-            className="bg-gray-50 rounded-xl p-6 text-center shadow hover:scale-105 transition"
-          >
-            <img
-              src="/person.jpg"
-              alt="محمد علي"
-              className="w-28 h-28 mx-auto rounded-full mb-4 object-cover"
-            />
-            <h3 className="text-xl font-semibold text-gray-800">محمد علي</h3>
-            <p className="text-sm text-gray-600 mt-1">مطور ويب</p>
-            <p className="text-gray-600 mt-3 text-sm leading-relaxed">
-              يبني واجهات المستخدم، يضمن أداء عالي وتجربة استخدام سلسة على جميع
-              الأجهزة والمتصفحات.
-            </p>
-            <div className="flex justify-center gap-4 mt-4 text-blue-600">
-              <a href="#" aria-label="Twitter محمد">
-                <FaTwitter />
-              </a>
-              <a href="#" aria-label="LinkedIn محمد">
-                <FaLinkedin />
-              </a>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
       {/* مهمتنا */}
       <section
         data-aos="fade-right"
-        className="mb-12 bg-white shadow-sm rounded-2xl p-6"
+        className="mb-16 bg-black/70 rounded-3xl p-10 shadow-xl border border-[#3a2a16]"
       >
-        <h2 className="flex items-center text-2xl font-bold mb-4 text-gray-800">
-          <FaBullseye className="text-blue-600 ml-3" />
+        <h2 className="flex items-center text-3xl font-bold mb-6 text-[#f5d37b]">
+          <FaBullseye className="ml-3 text-[#c9a24d]" />
           مهمتنا
         </h2>
-        <p className="text-lg leading-relaxed text-gray-700">
-          نعمل على تبسيط تجربة السفر من البداية للنهاية. نركز على توفير بيانات
-          موثوقة، أدوات مقارنة ذكية، وخيارات حجز شفافة تضع احتياجات المسافر أولاً.
+        <p className="text-lg leading-relaxed text-[#e7d6b4]">
+          نعمل على تبسيط تجربة السفر من البداية للنهاية، مع توفير بيانات موثوقة
+          وأدوات مقارنة ذكية وخيارات حجز شفافة.
         </p>
-        <p className="text-gray-600 mt-4 leading-relaxed">
-          نؤمن بأن كل رحلة تبدأ بخطة سليمة — لذلك نصمم واجهات وخدمات تسرّع اتخاذ
-          القرار وتقلّل من وقت البحث، مع دعم مباشر عند الحاجة.
+        <p className="text-[#cbb893] mt-5 leading-relaxed">
+          نؤمن بأن كل رحلة تبدأ بخطة سليمة — لذلك نصمم واجهات تسرّع القرار وتقلّل
+          وقت البحث.
         </p>
       </section>
 
       {/* قيمنا */}
       <section
         data-aos="fade-left"
-        className="mb-12 bg-gray-50 shadow-sm rounded-2xl p-6"
+        className="mb-16 bg-black/80 rounded-3xl p-10 shadow-xl border border-[#3a2a16]"
       >
-        <h2 className="flex items-center text-2xl font-bold mb-6 text-gray-800">
-          <FaGem className="text-blue-600 ml-3" />
+        <h2 className="flex items-center text-3xl font-bold mb-10 text-[#f5d37b]">
+          <FaGem className="ml-3 text-[#c9a24d]" />
           قيمنا
         </h2>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          <div>
-            <h3 className="text-lg font-semibold mb-2 text-gray-800">الشفافية</h3>
-            <p className="text-gray-600 text-sm">
-              نعرض الأسعار والشروط بوضوح دون رسوم مخفية، ونقدّم معلومات دقيقة
-              لقرارات سفر مطمئنة.
-            </p>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold mb-2 text-gray-800">الابتكار</h3>
-            <p className="text-gray-600 text-sm">
-              نطوّر خصائص تسهّل البحث والحجز ونستفيد من التحليلات لرفع جودة
-              التوصيات الشخصية.
-            </p>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold mb-2 text-gray-800">الجودة</h3>
-            <p className="text-gray-600 text-sm">
-              نختار شركاء موثوقين ونراجع تجارب المستخدمين لضمان معيار ثابت للخدمات.
-            </p>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold mb-2 text-gray-800">الدعم</h3>
-            <p className="text-gray-600 text-sm">
-              دعم سريع وعملي موجود لحل المشاكل وتقديم إرشاد قبل وأثناء وبعد الحجز.
-            </p>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold mb-2 text-gray-800">
-              المسؤولية
-            </h3>
-            <p className="text-gray-600 text-sm">
-              نسعى لعمليات سفر أكثر استدامة ونشجع الممارسات التي تحترم المجتمع
-              والبيئة.
-            </p>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold mb-2 text-gray-800">الأمان</h3>
-            <p className="text-gray-600 text-sm">
-              حماية بيانات المستخدمين واتباع معايير الدفع الآمن من أولوياتنا.
-            </p>
-          </div>
+          {[
+            "الشفافية",
+            "الابتكار",
+            "الجودة",
+            "الدعم",
+            "المسؤولية",
+            "الأمان",
+          ].map((value, idx) => (
+            <div
+              key={idx}
+              data-aos="fade-up"
+              className="
+                bg-[#141414]
+                rounded-2xl p-6
+                border border-[#3a2a16]
+                hover:border-[#c9a24d]
+                transition-all
+              "
+            >
+              <h3 className="text-lg font-semibold mb-2 text-[#f5d37b]">
+                {value}
+              </h3>
+              <p className="text-[#cbb893] text-sm">
+                نلتزم بتقديم تجربة موثوقة تعكس أعلى معايير الجودة والاهتمام.
+              </p>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* رؤيتنا */}
       <section
-        data-aos="fade-right"
-        className="mb-12 bg-white shadow-sm rounded-2xl p-6"
+        data-aos="fade-up"
+        className="bg-black/70 rounded-3xl p-10 shadow-xl border border-[#3a2a16]"
       >
-        <h2 className="flex items-center text-2xl font-bold mb-4 text-gray-800">
-          <FaEye className="text-blue-600 ml-3" />
+        <h2 className="flex items-center text-3xl font-bold mb-6 text-[#f5d37b]">
+          <FaEye className="ml-3 text-[#c9a24d]" />
           رؤيتنا
         </h2>
-        <p className="text-lg leading-relaxed text-gray-700">
+        <p className="text-lg leading-relaxed text-[#e7d6b4]">
           أن نكون المنصة المفضلة للمسافرين في العالم العربي عبر الجمع بين
-          التكنولوجيا وخدمة عملاء استثنائية — لتسهيل رحلات أكثر ذكاءً وأمانًا.
+          التكنولوجيا وخدمة عملاء استثنائية.
         </p>
       </section>
     </div>

@@ -18,7 +18,7 @@ import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
-    <div className='min-h-screen overflow-x-hidden'>
+    <div className='min-h-screen overflow-x-hidden bg-black'>
     <ScrollToTop/>
       <Navbar />
       
@@ -31,7 +31,7 @@ function App() {
         <Route path='/contact' element={<Contact/>}/>
         <Route path="/booking/:id" element={<Booking />} />
         <Route path='/register' element={<Register/>}/>
-        <Route path='login' element={<Login/>}/>
+        <Route path='/login' element={<Login/>}/>
         <Route path="*" element={<NotFound />} />
 
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"; // ضفت useRef
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import HotelCard from "../components/hotelcard";
 import TypingTitle from "../components/typingTitle";
@@ -15,7 +15,6 @@ const Home = () => {
   const [sortedHotels, setSortedHotels] = useState([]);
   const [animate, setAnimate] = useState(false);
 
-  // ref للفنادق
   const hotelsRef = useRef(null);
 
   useEffect(() => {
@@ -51,8 +50,7 @@ const Home = () => {
   const handleSearch = () => {
     let filtered = hotels.filter((hotel) => {
       const matchCity = city
-        ? hotel.city &&
-          hotel.city.toLowerCase().includes(city.toLowerCase())
+        ? hotel.city && hotel.city.toLowerCase().includes(city.toLowerCase())
         : true;
       const matchName = hotelName
         ? hotel.name &&
@@ -64,7 +62,6 @@ const Home = () => {
     setCity("");
     setHotelName("");
 
-    // ينزل للجزء بتاع الفنادق
     if (hotelsRef.current) {
       hotelsRef.current.scrollIntoView({ behavior: "smooth" });
     }
@@ -72,59 +69,71 @@ const Home = () => {
 
   return (
     <div
-      className={`p-4 mt-20 ${animate ? "page-enter-active" : "page-enter"}`}
+      className={`p-4 mt-20 transition-transform duration-700 ease-in-out ${
+        animate ? "translate-y-0 opacity-100" : "-translate-y-20 opacity-0"
+      }`}
     >
-      <div
-        className="relative flex flex-col items-center bg-cover bg-center p-4 min-h-[80vh] "
-        style={{ backgroundImage: "url(/beach.jpeg)" }}
-      >
-        <TypingTitle />
+      {/* Hero Section */}
+      <div className="relative flex flex-col items-center w-full min-h-[80vh] rounded-3xl overflow-hidden border border-[#3a2a16]">
+        {/* Background Image */}
+        <div
+          className="absolute inset-0 w-full h-full bg-cover bg-center"
+          style={{ backgroundImage: "url('/imagesea.jpg')" }}
+        ></div>
 
-        {/* Search inputs */}
-        <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-full max-w-md px-4 flex flex-col gap-3 items-center">
-          <input
-            type="text"
-            placeholder={t("search_city")}
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            className="outline-none px-3 py-2 rounded-2xl w-full bg-blue-50 shadow-md opacity-0 animate-slide-in"
-            style={{ animationDelay: "0.1s" }}
-          />
-          <input
-            type="text"
-            placeholder={t("search_hotel")}
-            value={hotelName}
-            onChange={(e) => setHotelName(e.target.value)}
-            className="outline-none px-3 py-2 rounded-2xl w-full bg-blue-50 shadow-md opacity-0 animate-slide-in"
-            style={{ animationDelay: "0.3s" }}
-          />
-          <button
-            onClick={handleSearch}
-            className="bg-blue-400 text-white px-3 py-1.5 rounded-xl text-sm w-28 hover:bg-blue-500 transition shadow-md opacity-0 animate-slide-in"
-            style={{ animationDelay: "0.5s" }}
-          >
-            {t("search")}
-          </button>
-        </div>
+        {/* Overlay دهبي شفاف */}
+        <div className="absolute inset-0 bg-black/30"></div>
 
-        {/* Sorting */}
-        <div className="mb-4 absolute top-10 right-5 m:right-10">
-          <select
-            value={sortOption}
-            onChange={(e) => setSortOption(e.target.value)}
-            className="outline-none px-4 py-2 rounded-2xl w-52 bg-blue-50 shadow-md border border-blue-100 cursor-pointer transition-all duration-300 hover:bg-blue-50 focus:ring-2 focus:ring-blue-300"
-          >
-            <option value="">{t("sort_by")}</option>
-            <option value="name-asc">{t("name_asc")}</option>
-            <option value="name-desc">{t("name_desc")}</option>
-            <option value="rating-asc">{t("rating_asc")}</option>
-            <option value="rating-desc">{t("rating_desc")}</option>
-          </select>
+        {/* Content */}
+        <div className="relative z-10 flex flex-col items-center w-full p-8">
+          <TypingTitle />
+
+          {/* Search Inputs */}
+          <div className="mt-16 w-full max-w-md flex flex-col gap-4 items-center">
+            <input
+              type="text"
+              placeholder={t("search_city")}
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              className="outline-none px-4 py-2 rounded-2xl w-full bg-black/50 text-[#f5d37b] placeholder-[#d6c3a3] shadow-lg"
+            />
+            <input
+              type="text"
+              placeholder={t("search_hotel")}
+              value={hotelName}
+              onChange={(e) => setHotelName(e.target.value)}
+              className="outline-none px-4 py-2 rounded-2xl w-full bg-black/50 text-[#f5d37b] placeholder-[#d6c3a3] shadow-lg"
+            />
+            <button
+              onClick={handleSearch}
+              className="bg-gradient-to-r from-[#c9a24d] to-[#f5d37b] text-black font-bold px-6 py-2 rounded-full hover:scale-105 hover:shadow-lg transition-all"
+            >
+              {t("search")}
+            </button>
+          </div>
+
+          {/* Sorting */}
+          <div className="mt-6 w-full flex justify-end">
+            <select
+              value={sortOption}
+              onChange={(e) => setSortOption(e.target.value)}
+              className="outline-none px-4 py-2 rounded-2xl w-52 bg-black/50 text-[#f5d37b] shadow-md border border-[#c9a24d] cursor-pointer transition-all duration-300 hover:bg-black/60 focus:ring-2 focus:ring-[#c9a24d]"
+            >
+              <option value="">{t("sort_by")}</option>
+              <option value="name-asc">{t("name_asc")}</option>
+              <option value="name-desc">{t("name_desc")}</option>
+              <option value="rating-asc">{t("rating_asc")}</option>
+              <option value="rating-desc">{t("rating_desc")}</option>
+            </select>
+          </div>
         </div>
       </div>
 
-      {/* Hotels section */}
-      <h2 ref={hotelsRef} className="text-xl font-bold mt-20 text-center">
+      {/* Hotels Section */}
+      <h2
+        ref={hotelsRef}
+        className="text-xl font-bold mt-20 text-center text-[#f5d37b]"
+      >
         {t("available_hotels")}
       </h2>
 
@@ -140,7 +149,7 @@ const Home = () => {
             <HotelCard key={hotel._id} hotel={hotel} />
           ))
         ) : (
-          <p className="text-gray-500 text-center w-full">{t("no_results")}</p>
+          <p className="text-gray-400 text-center w-full">{t("no_results")}</p>
         )}
       </div>
     </div>

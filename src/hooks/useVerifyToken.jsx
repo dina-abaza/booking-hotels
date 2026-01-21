@@ -31,7 +31,7 @@ export default function UseVerifyToken() {
           setLoading(false);
         } catch (refreshErr) {
           console.error("Refresh failed, redirect to login", refreshErr);
-          navigate('/admin/login');
+          navigate('/login');
         }
       }
     };

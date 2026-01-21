@@ -16,6 +16,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+
 /* a {
   font-weight: 500;
   color: #646cff;
@@ -30,6 +31,7 @@ body {
  padding: 0;
  overflow-x: hidden;
  box-sizing: border-box;
+ background-color:black ;
 }
 
 h1 {
