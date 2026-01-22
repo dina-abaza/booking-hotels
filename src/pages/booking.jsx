@@ -1,243 +1,203 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-// استيراد التوستفاي
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import UseVerifyToken from "../hooks/useVerifyToken";
+import useAuthStore from "../store/authStore"; // تأكدي من صحة المسار
 
 export default function Booking() {
-  // UseVerifyToken(); // تم تعطيلها لتفتح الصفحة للجميع
-  
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const [hotel, setHotel] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState("");
-  const [rooms, setRooms] = useState(1);
-  const [guests, setGuests] = useState(1);
-  const [nights, setNights] = useState(1);
-  const [checkIn, setCheckIn] = useState("");
-  const [checkOut, setCheckOut] = useState("");
-  const [showPopup, setShowPopup] = useState(false);
-  const [popupVisible, setPopupVisible] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("card");
-  const [error, setError] = useState("");
-  const [animate, setAnimate] = useState(false);
-  const [buttonAnimate, setButtonAnimate] = useState(false);
+UseVerifyToken();
+const { id } = useParams();
+const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchHotel = async () => {
-      try {
-        const res = await axios.get(
-          `https://booking-hotels-back-end-api.vercel.app/api/hotels/${id}`
-        );
-        setHotel(res.data);
-        setLoading(false);
-        setTimeout(() => setAnimate(true), 100);
-        setTimeout(() => setButtonAnimate(true), 600);
-      } catch (error) {
-        console.error("فشل تحميل بيانات الفندق:", error);
-        setLoading(false);
-      }
-    };
-    fetchHotel();
-  }, [id]);
+// استدعاء حالة تسجيل الدخول من الستور
+const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
-  const totalPrice = hotel ? hotel.price * nights * rooms : 0;
+const [hotel, setHotel] = useState(null);
+const [loading, setLoading] = useState(true);
+const [message, setMessage] = useState("");
+const [rooms, setRooms] = useState(1);
+const [guests, setGuests] = useState(1);
+const [nights, setNights] = useState(1);
+const [checkIn, setCheckIn] = useState("");
+const [checkOut, setCheckOut] = useState("");
+const [showPopup, setShowPopup] = useState(false);
+const [popupVisible, setPopupVisible] = useState(false);
+const [paymentMethod, setPaymentMethod] = useState("card");
+const [error, setError] = useState("");
+const [animate, setAnimate] = useState(false);
+const [buttonAnimate, setButtonAnimate] = useState(false);
 
-  const handleBooking = () => {
-    // 1. التأكد من إدخال التواريخ أولاً
-    if (!checkIn || !checkOut) {
-      setError("يرجى اختيار تواريخ الدخول والخروج");
-      return;
-    }
+useEffect(() => {
+const fetchHotel = async () => {
+try {
+const res = await axios.get(`https://booking-hotels-back-end-api.vercel.app/api/hotels/${id}`);
+setHotel(res.data);
+setLoading(false);
+setTimeout(() => setAnimate(true), 100);
+setTimeout(() => setButtonAnimate(true), 600);
+} catch (error) {
+console.error("فشل تحميل بيانات الفندق:", error);
+setLoading(false);
+}
+};
+fetchHotel();
+}, [id]);
 
-    const start = new Date(checkIn);
-    const end = new Date(checkOut);
+const totalPrice = hotel ? hotel.price * nights * rooms : 0;
 
-    // تصفير الساعات لضمان دقة المقارنة بين الأيام فقط
-    start.setHours(0, 0, 0, 0);
-    end.setHours(0, 0, 0, 0);
+const handleBooking = () => {
+if (!checkIn || !checkOut) {
+setError("يرجى اختيار تواريخ الدخول والخروج");
+return;
+}
+if (new Date(checkOut) <= new Date(checkIn)) {
+setError("تاريخ الخروج يجب أن يكون بعد تاريخ الدخول");
+return;
+}
+setError("");
+setShowPopup(true);
+setTimeout(() => setPopupVisible(true), 50);
+};
 
-    // 2. حساب الفرق الفعلي بالأيام
-    const differenceInTime = end.getTime() - start.getTime();
-    const actualNights = Math.round(differenceInTime / (1000 * 3600 * 24));
+const closePopup = () => {
+setPopupVisible(false);
+setTimeout(() => setShowPopup(false), 300);
+};
 
-    // 3. التحقق من الترتيب الزمني (الخروج بعد الدخول)
-    if (actualNights <= 0) {
-      setError("تاريخ الخروج يجب أن يكون بعد تاريخ الدخول بليلة واحدة على الأقل");
-      return;
-    }
+const confirmBooking = () => {
+// أهم جزء: لو مش مسجل دخول اظهر الرسالة فوراً
+if (!isLoggedIn) {
+setMessage("❌ عذراً، يجب تسجيل الدخول أولاً لإتمام الحجز.");
+return;
+}
 
-    // 4. التحقق من مطابقة الرقم المكتوب للفرق بين التواريخ
-    if (parseInt(nights) !== actualNights) {
-      setError(`⚠️ عذراً، عدد الليالي المدخل (${nights}) غير صحيح. بناءً على التواريخ المختارة، يجب أن يكون (${actualNights}) ليلة.`);
-      return;
-    }
+const bookingData = {
+hotelId: hotel._id,
+rooms,
+guests,
+nights,
+checkIn,
+checkOut,
+paymentMethod,
+totalPrice,
+};
 
-    // إذا تم اجتياز كل الشروط
-    setError("");
-    setShowPopup(true);
-    setTimeout(() => setPopupVisible(true), 50);
-  };
+const endpoint = "https://booking-hotels-back-end-api.vercel.app/api/Booking";
 
-  const closePopup = () => {
-    setPopupVisible(false);
-    setTimeout(() => setShowPopup(false), 300);
-  };
+axios.post(endpoint, bookingData, { withCredentials: true })
+.then((res) => {
+if (paymentMethod === "card") {
+if (res.data.checkoutUrl) {
+window.location.href = res.data.checkoutUrl;
+} else {
+setMessage("⚠️ لم يتم استلام رابط الدفع.");
+}
+} else {
+setMessage("✅ تم الحجز بنجاح.");
+closePopup();
+setTimeout(() => navigate("/"), 2500);
+}
+})
+.catch((err) => {
+setMessage(err.response?.data?.message || "❌ حدث خطأ ما.");
+});
+};
 
-  const confirmBooking = () => {
-    const token = document.cookie.includes("token") || localStorage.getItem("token");
+if (loading) return (
+<div className="min-h-screen bg-black flex items-center justify-center text-xl">
+<div className="text-[#D4AF37] animate-pulse font-bold tracking-[0.3em]">جارٍ تجهيز جناحك الملكي...</div>
+</div>
+);
 
-    if (!token) {
-      toast.error("👑 عذراً، يجب تسجيل الدخول أولاً لإتمام هذا الحجز الفاخر", {
-        position: "top-center",
-        autoClose: 4000,
-        theme: "dark",
-      });
-      return;
-    }
+return (
+<div className="min-h-screen bg-black pb-20 overflow-x-hidden font-sans" dir="rtl">
+<div className={`max-w-xl mx-auto p-8 mt-40 rounded-[2.5rem] bg-zinc-900 border border-[#D4AF37]/30 shadow-2xl transition-all duration-1000 ease-out ${animate ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0"}`}>
+<div className="text-center mb-10">
+<h2 className="text-[#D4AF37] text-3xl font-black mb-2 italic">تأكيد الحجز الفندقي</h2>
+<p className="text-zinc-400 text-sm tracking-widest uppercase">{hotel?.name}</p>
+</div>
 
-    const bookingData = {
-      hotelId: hotel._id,
-      rooms,
-      guests,
-      nights,
-      checkIn,
-      checkOut,
-      paymentMethod,
-      totalPrice,
-    };
+<div className="space-y-6">
+{[
+{ label: "عدد الغرف", value: rooms, setter: setRooms, type: "number" },
+{ label: "عدد الأفراد", value: guests, setter: setGuests, type: "number" },
+{ label: "عدد الليالي", value: nights, setter: setNights, type: "number" },
+{ label: "تاريخ الدخول", value: checkIn, setter: setCheckIn, type: "date" },
+{ label: "تاريخ الخروج", value: checkOut, setter: setCheckOut, type: "date" },
+].map((field, idx) => (
+<div key={idx} className="group">
+<label className="block mb-2 mr-2 text-[#D4AF37] font-bold text-sm">{field.label}</label>
+<input
+type={field.type}
+min="1"
+value={field.value}
+onChange={(e) => field.setter(e.target.value)}
+className="w-full bg-black border-2 border-[#D4AF37]/20 rounded-2xl text-[#D4AF37] focus:border-[#D4AF37] px-5 py-3 outline-none transition-all duration-300 shadow-inner group-hover:border-[#D4AF37]/50"
+style={{ colorScheme: "dark" }}
+/>
+</div>
+))}
+</div>
 
-    const endpoint = "https://booking-hotels-back-end-api.vercel.app/api/Booking";
+{error && (
+<div className="mt-5 p-4 bg-red-500/10 border border-red-500/30 rounded-2xl animate-bounce">
+<p className="text-red-500 text-center font-bold text-sm">{error}</p>
+</div>
+)}
 
-    axios.post(endpoint, bookingData, { withCredentials: true })
-      .then((res) => {
-        if (paymentMethod === "card") {
-          if (res.data.checkoutUrl) {
-            window.location.href = res.data.checkoutUrl;
-          } else {
-            toast.warning("⚠️ لم يتم استلام رابط الدفع.");
-          }
-        } else {
-          toast.success("✅ تم الحجز بنجاح. سنقوم بالتواصل معك.");
-          closePopup();
-          setTimeout(() => navigate("/"), 2500);
-        }
-      })
-      .catch((err) => {
-        const errorMsg = err.response?.data?.message || "❌ حدث خطأ أثناء الحجز.";
-        toast.error(errorMsg);
-      });
-  };
+<button
+onClick={handleBooking}
+className={`w-full mt-10 py-5 rounded-2xl text-black font-black bg-[#D4AF37] shadow-lg shadow-[#D4AF37]/40 transition-all duration-700 hover:bg-[#b8952e] hover:scale-[1.02] active:scale-95 ${buttonAnimate ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"}`}
+>
+مراجعة بيانات الحجز 
+</button>
 
-  if (loading) return (
-    <div className="min-h-screen bg-black flex items-center justify-center">
-      <div className="text-[#D4AF37] animate-pulse font-bold tracking-[0.3em] text-xl">جارٍ تجهيز جناحك الملكي...</div>
-    </div>
-  );
+{/* مكان ظهور رسالة الخطأ أو النجاح */}
+{message && (
+<div className="mt-6 p-4 bg-white/10 border border-[#D4AF37] rounded-xl">
+<p className="text-center text-[#D4AF37] font-bold">{message}</p>
+</div>
+)}
+</div>
 
-  return (
-    <div className="min-h-screen bg-black pb-20 overflow-x-hidden font-sans" dir="rtl">
-      <div
-        className={`max-w-xl mx-auto p-8 mt-40 rounded-[2.5rem] bg-[#0f0f0f] border border-[#D4AF37]/20 shadow-2xl transition-all duration-1000 ease-out ${
-          animate ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0"
-        }`}
-      >
-        <div className="text-center mb-10">
-          <h2 className="text-[#D4AF37] text-3xl font-black mb-2 italic">تأكيد الحجز الفندقي</h2>
-          <p className="text-zinc-500 text-sm tracking-widest uppercase">{hotel?.name}</p>
-        </div>
+{showPopup && (
+<div className="fixed inset-0 z-50 flex justify-center items-center p-4">
+<div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={closePopup}></div>
+<div className={`relative bg-zinc-900 border border-[#D4AF37]/30 p-10 rounded-[3rem] shadow-2xl max-w-md w-full z-10 transform transition-all duration-500 ${popupVisible ? "scale-100 opacity-100" : "scale-90 opacity-0"}`}>
+<h3 className="text-2xl font-black mb-6 text-[#D4AF37] border-b-2 border-[#D4AF37]/30 pb-2 inline-block">تفاصيل الفاتورة</h3>
+<div className="space-y-4 mb-8">
+<div className="flex justify-between text-zinc-400 font-bold">
+<span>الفندق:</span>
+<span className="text-white">{hotel?.name}</span>
+</div>
+<div className="flex justify-between text-zinc-400 font-bold">
+<span>إجمالي السعر:</span>
+<span className="text-[#D4AF37] text-2xl font-black">{totalPrice} ج.م</span>
+</div>
+</div>
+<div className="mb-8">
+<label className="block mb-3 font-black text-[#D4AF37] text-sm uppercase">اختر وسيلة الدفع</label>
+<select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} className="w-full bg-black border border-[#D4AF37]/30 rounded-xl px-4 py-4 text-[#D4AF37] font-bold outline-none focus:ring-2 focus:ring-[#D4AF37]">
+<option value="card">💳 بطاقة ائتمان</option>
+<option value="cash">💵 دفع نقدي</option>
+</select>
+</div>
 
-        <div className="space-y-6">
-          {[
-            { label: "عدد الغرف", value: rooms, setter: setRooms, type: "number" },
-            { label: "عدد الأفراد", value: guests, setter: setGuests, type: "number" },
-            { label: "عدد الليالي", value: nights, setter: setNights, type: "number" },
-            { label: "تاريخ الدخول", value: checkIn, setter: setCheckIn, type: "date" },
-            { label: "تاريخ الخروج", value: checkOut, setter: setCheckOut, type: "date" },
-          ].map((field, idx) => (
-            <div key={idx} className="group">
-              <label className="block mb-2 mr-2 text-zinc-400 font-bold text-sm">{field.label}</label>
-              <input
-                type={field.type}
-                min="1"
-                value={field.value}
-                onChange={(e) => field.setter(e.target.value)}
-                className="w-full bg-black border-b-2 border-r-2 border-[#D4AF37]/20 rounded-2xl text-white focus:border-[#D4AF37] px-5 py-3 outline-none transition-all duration-300 shadow-inner group-hover:border-[#D4AF37]/50"
-                style={{ colorScheme: "dark" }}
-              />
-            </div>
-          ))}
-        </div>
+{/* هنا الزرار اللي بيعمل Confirm */}
+<div className="flex flex-col gap-3">
+<button onClick={confirmBooking} className="w-full py-4 rounded-xl bg-[#D4AF37] text-black font-black text-lg hover:bg-[#b8952e] transition-all">
+تأكيد ودفع
+</button>
+<button onClick={closePopup} className="w-full py-3 rounded-xl border border-[#D4AF37]/30 text-[#D4AF37] font-bold hover:bg-white/5 transition-all">
+تراجع
+</button>
+</div>
 
-        {error && (
-          <div className="mt-5 p-4 bg-red-500/10 border border-red-500/30 rounded-2xl">
-            <p className="text-red-500 text-center font-bold text-sm leading-relaxed">{error}</p>
-          </div>
-        )}
-
-        <button
-          onClick={handleBooking}
-          className={`w-full mt-10 py-5 rounded-2xl text-black font-black bg-[#D4AF37] shadow-lg shadow-[#D4AF37]/20 transition-all duration-700 hover:bg-white hover:scale-[1.02] active:scale-95 ${
-            buttonAnimate ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
-          }`}
-        >
-          مراجعة بيانات الحجز 
-        </button>
-      </div>
-
-      {showPopup && (
-        <div className="fixed inset-0 z-50 flex justify-center items-center p-4">
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={closePopup}></div>
-          <div
-            className={`relative bg-white p-10 rounded-[3rem] shadow-2xl max-w-md w-full z-10 transform transition-all duration-500 ${
-              popupVisible ? "scale-100 opacity-100" : "scale-90 opacity-0"
-            }`}
-          >
-            <h3 className="text-2xl font-black mb-6 text-black border-b-2 border-[#D4AF37] pb-2 inline-block">تفاصيل الفاتورة</h3>
-            <div className="space-y-4 mb-8">
-              <div className="flex justify-between text-zinc-500 font-bold">
-                <span>الفندق:</span>
-                <span className="text-black">{hotel?.name}</span>
-              </div>
-              <div className="flex justify-between text-zinc-500 font-bold">
-                <span>عدد الليالي:</span>
-                <span className="text-black">{nights} ليلة</span>
-              </div>
-              <div className="flex justify-between text-zinc-500 font-bold">
-                <span>إجمالي السعر:</span>
-                <span className="text-[#D4AF37] text-2xl font-black">{totalPrice} ج.م</span>
-              </div>
-            </div>
-            <div className="mb-8">
-              <label className="block mb-3 font-black text-black text-sm uppercase">اختر وسيلة الدفع</label>
-              <select
-                value={paymentMethod}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-                className="w-full bg-zinc-100 border-none rounded-xl px-4 py-4 text-black font-bold outline-none focus:ring-2 focus:ring-[#D4AF37]"
-              >
-                <option value="card">💳 بطاقة ائتمان (Visa/Mastercard)</option>
-                <option value="cash">💵 الدفع النقدي عند الوصول</option>
-              </select>
-            </div>
-            <div className="flex flex-col gap-3">
-              <button
-                onClick={confirmBooking}
-                className="w-full py-4 rounded-xl bg-black text-[#D4AF37] font-black text-lg hover:bg-[#1a1a1a] transition-all"
-              >
-                تأكيد ودفع
-              </button>
-              <button
-                onClick={closePopup}
-                className="w-full py-3 rounded-xl border border-zinc-200 text-zinc-400 font-bold hover:bg-zinc-50 transition-all"
-              >
-                تراجع
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+{/* رسالة تظهر "داخل" البوب أب لو فيه خطأ في الدفع */}
+{message && <p className="text-red-500 text-center mt-4 font-bold">{message}</p>}
+</div>
+</div>
+)}
+</div>
+);
 }
