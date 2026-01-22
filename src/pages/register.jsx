@@ -1,183 +1,116 @@
-import React, { useState } from "react";
-import {
-  FaBars,
-  FaTimes,
-  FaQuestionCircle,
-  FaInfoCircle,
-  FaUser,
-  FaSignInAlt,
-  FaSignOutAlt,
-  FaUserCircle,
-} from "react-icons/fa";
-import { HiSparkles } from "react-icons/hi";
-import { Link, useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import useAuthStore from "../store/authStore";
-import { motion, AnimatePresence } from "framer-motion";
 
-const Navbar = () => {
-  const { t, i18n } = useTranslation();
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  const logout = useAuthStore((state) => state.logout);
+export default function Register() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [animate, setAnimate] = useState(false);
+  const [lineAnimate, setLineAnimate] = useState(false);
+  const login = useAuthStore((state) => state.login);
   const navigate = useNavigate();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const handleLogout = () => {
-    logout();
-    localStorage.removeItem("user");
-    setIsMenuOpen(false);
-    navigate("/login");
+  useEffect(() => {
+    const timer = setTimeout(() => setAnimate(true), 50);
+    const lineTimer = setTimeout(() => setLineAnimate(true), 400);
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(lineTimer);
+    };
+  }, []);
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await axios.post(
+        "https://booking-hotels-back-end-api.vercel.app/api/Auth/register",
+        { email, password },
+        { withCredentials: true }
+      );
+
+      login(res.data.user);
+      toast.success("✅ تم إنشاء الحساب بنجاح!");
+      setEmail("");
+      setPassword("");
+
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "❌ حدث خطأ أثناء التسجيل. حاول مرة أخرى."
+      );
+    }
   };
-
-  const toggleLanguage = () => {
-    const newLang = i18n.language === "ar" ? "en" : "ar";
-    i18n.changeLanguage(newLang);
-    localStorage.setItem("language", newLang);
-    document.documentElement.dir = newLang === "ar" ? "rtl" : "ltr";
-  };
-
-  // مكون الزر المنزلق للغة لاستخدامه في الجهتين
-  const LanguageToggle = () => (
-    <div
-      onClick={toggleLanguage}
-      className="w-14 h-7 bg-zinc-800 rounded-full p-1 cursor-pointer border border-amber-900/30 shadow-inner"
-    >
-      <motion.div
-        animate={{ x: i18n.language === "ar" ? 0 : 28 }}
-        transition={{ type: "spring", stiffness: 500, damping: 30 }}
-        className="w-5 h-5 bg-amber-400 text-black text-[10px] font-bold rounded-full flex items-center justify-center"
-      >
-        {i18n.language === "ar" ? "AR" : "EN"}
-      </motion.div>
-    </div>
-  );
 
   return (
-    <motion.nav
-      initial={{ y: -60, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.7 }}
-      className="fixed top-0 left-0 w-full z-50 bg-black shadow-2xl rounded-b-[2.5rem] md:rounded-b-[3rem]"
-    >
-      <div className="max-w-7xl mx-auto px-6 pt-6 pb-10 md:pt-8 md:pb-12 flex justify-between items-center">
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-3">
-          <HiSparkles className="text-amber-500 text-2xl" />
-          <span
-            style={{
-              fontFamily: i18n.language === "ar" ? "Lalezar, cursive" : "Pacifico, cursive",
-            }}
-            className="text-3xl md:text-4xl bg-gradient-to-r from-[#4a2f1a] via-[#b08a3e] to-[#f1d28a] bg-clip-text text-transparent"
-          >
-            {i18n.language === "ar" ? "ترافيللو" : "Travelio"}
-          </span>
+    <div className="flex flex-col md:flex-row min-h-screen bg-black text-white mt-30 md:mt-12">
+      {/* القسم الشمال */}
+      <div
+        className={`flex-1 flex flex-col justify-center items-center transition-transform duration-700 ease-in-out ${
+          animate ? "translate-x-0 opacity-100" : "-translate-x-40 opacity-0"
+        }`}
+      >
+        <h1 className="text-5xl font-extrabold mb-4 text-[#f5d37b]">مرحبـــًا</h1>
+        <div
+          className={`h-1 bg-[#f5d37b] rounded transition-all duration-1000 ${
+            lineAnimate ? "w-40" : "w-0"
+          }`}
+        ></div>
+        <p className="mt-6 text-gray-300 text-center max-w-md mb-5">
+          اكتشف أفضل العروض لحجز الفنادق بسهولة وسرعة.
+          <br /> نمنحك تجربة مميزة ومريحة.
+        </p>
+        <Link
+          to="/about"
+          className="inline-block px-6 py-2 rounded-full bg-gradient-to-r from-[#c9a24d] to-[#f5d37b] text-black font-semibold shadow-md hover:opacity-90 transition"
+        >
+          اقرأ المزيد
         </Link>
-
-        {/* Mobile Button */}
-        <div className="md:hidden">
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="text-amber-400 p-2"
-          >
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={isMenuOpen ? "close" : "open"}
-                initial={{ rotate: -90, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: 90, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                {isMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-              </motion.div>
-            </AnimatePresence>
-          </button>
-        </div>
-
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-10">
-          <Link to="/about" className="flex items-center gap-2 text-[#e6c98f] hover:text-amber-400 transition">
-            <FaInfoCircle /> {t("about")}
-          </Link>
-          <Link to="/contact" className="flex items-center gap-2 text-[#e6c98f] hover:text-amber-400 transition">
-            <FaQuestionCircle /> {t("contact")}
-          </Link>
-
-          <LanguageToggle />
-
-          {isLoggedIn && (
-            <span className="flex items-center gap-2 text-amber-300 font-semibold">
-              <FaUserCircle /> {t("welcome")}
-            </span>
-          )}
-
-          {isLoggedIn ? (
-            <button onClick={handleLogout} className="flex items-center gap-2 border border-red-500 text-red-400 px-6 py-2 rounded-full hover:bg-red-500 hover:text-white transition">
-              <FaSignOutAlt /> {t("logout")}
-            </button>
-          ) : (
-            <div className="flex gap-4">
-              <Link to="/register" className="bg-gradient-to-r from-[#b08a3e] to-[#f1d28a] text-black px-6 py-2 rounded-full font-bold">
-                <FaUser />
-              </Link>
-              <Link to="/login" className="border border-amber-400 text-amber-300 px-6 py-2 rounded-full">
-                <FaSignInAlt />
-              </Link>
-            </div>
-          )}
-        </div>
       </div>
 
-      {/* Mobile Menu مع انسيابية عالية */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="md:hidden bg-black border-t border-amber-900/20 overflow-hidden"
-          >
-            <div className="px-8 pb-10 pt-6 flex flex-col gap-6 items-center">
-              <Link to="/about" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 text-[#e6c98f] text-lg">
-                <FaInfoCircle className="text-amber-500" /> {t("about")}
-              </Link>
-              <Link to="/contact" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 text-[#e6c98f] text-lg">
-                <FaQuestionCircle className="text-amber-500" /> {t("contact")}
-              </Link>
+      {/* القسم اليمين (الفورم) */}
+      <div
+        className={`flex-1 flex justify-center items-center mt-8 md:mt-0 transition-transform duration-700 ease-in-out ${
+          animate ? "translate-x-0 opacity-100" : "translate-x-40 opacity-0"
+        }`}
+      >
+        <div className="w-full max-w-lg p-6 sm:p-8 rounded-2xl shadow-lg bg-[#3a2a16] min-h-[60vh] sm:min-h-[70vh]">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center text-[#f5d37b]">
+            إنشاء حساب
+          </h2>
 
-              {/* زر اللغة بنفس شكل اللاب توب */}
-              <div className="flex flex-col items-center gap-2 mt-2">
-                <span className="text-zinc-500 text-xs uppercase tracking-widest">{t("language") || "Language"}</span>
-                <LanguageToggle />
-              </div>
+          <form onSubmit={handleRegister}>
+            <label className="block mb-2 text-sm sm:text-base">البريد الإلكتروني</label>
+            <input
+              type="email"
+              className="w-11/12 sm:w-full p-2 sm:p-3 rounded-lg mb-4 bg-black/50 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#f5d37b]"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
 
-              <div className="w-full h-[1px] bg-amber-900/10 my-2"></div>
+            <label className="block mb-2 text-sm sm:text-base">كلمة المرور</label>
+            <input
+              type="password"
+              className="w-11/12 sm:w-full p-2 sm:p-3 rounded-lg mb-6 bg-black/50 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#f5d37b]"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
 
-              {isLoggedIn ? (
-                <div className="flex flex-col items-center gap-4 w-full">
-                  <span className="flex items-center gap-2 text-amber-300 font-bold">
-                    <FaUserCircle className="text-xl" /> {t("welcome")}
-                  </span>
-                  <button onClick={handleLogout} className="flex items-center justify-center gap-2 w-full border-2 border-red-500/50 text-red-400 py-3 rounded-2xl font-bold active:scale-95 transition-transform">
-                    <FaSignOutAlt /> {t("logout")}
-                  </button>
-                </div>
-              ) : (
-                <div className="flex flex-col gap-4 w-full">
-                  <Link to="/register" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-center gap-2 bg-gradient-to-r from-[#b08a3e] to-[#f1d28a] text-black py-4 rounded-2xl font-black shadow-lg shadow-amber-500/10">
-                    <FaUser /> {t("register") || "إنشاء حساب ملكي"}
-                  </Link>
-                  <Link to="/login" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-center gap-2 border-2 border-amber-500/30 text-amber-300 py-4 rounded-2xl font-bold">
-                    <FaSignInAlt /> {t("login") || "تسجيل الدخول"}
-                  </Link>
-                </div>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.nav>
+            <button
+              type="submit"
+              className="w-11/12 sm:w-full py-2 sm:py-3 rounded-lg text-black font-bold bg-gradient-to-r from-[#c9a24d] to-[#f5d37b] hover:opacity-90 transition"
+            >
+              إنشاء حساب
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
   );
-};
-
-export default Navbar;
+}
