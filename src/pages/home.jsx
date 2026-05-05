@@ -113,7 +113,7 @@ const Home = () => {
           </div>
 
           {/* Sorting */}
-          <div className="mt-6 w-full flex justify-end">
+          <div className="mt-6 w-full flex justify-center md:justify-end">
             <select
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value)}
