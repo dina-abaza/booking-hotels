@@ -95,14 +95,14 @@ const Home = () => {
               placeholder={t("search_city")}
               value={city}
               onChange={(e) => setCity(e.target.value)}
-              className="outline-none px-4 py-2 rounded-2xl w-full bg-black/50 text-[#f5d37b] placeholder-[#d6c3a3] shadow-lg"
+              className="outline-none px-4 py-2 rounded-2xl w-full bg-black/50 text-[#f5d37b] placeholder-[#d6c3a3] shadow-lg text-center"
             />
             <input
               type="text"
               placeholder={t("search_hotel")}
               value={hotelName}
               onChange={(e) => setHotelName(e.target.value)}
-              className="outline-none px-4 py-2 rounded-2xl w-full bg-black/50 text-[#f5d37b] placeholder-[#d6c3a3] shadow-lg"
+              className="outline-none px-4 py-2 rounded-2xl w-full bg-black/50 text-[#f5d37b] placeholder-[#d6c3a3] shadow-lg text-center"
             />
             <button
               onClick={handleSearch}
@@ -117,7 +117,7 @@ const Home = () => {
             <select
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value)}
-              className="outline-none px-4 py-2 rounded-2xl w-52 bg-black/50 text-[#f5d37b] shadow-md border border-[#c9a24d] cursor-pointer transition-all duration-300 hover:bg-black/60 focus:ring-2 focus:ring-[#c9a24d]"
+              className="outline-none px-4 py-2 rounded-2xl w-52 bg-black/50 text-[#f5d37b] shadow-md border border-[#c9a24d] cursor-pointer text-center transition-all duration-300 hover:bg-black/60 focus:ring-2 focus:ring-[#c9a24d]"
             >
               <option value="">{t("sort_by")}</option>
               <option value="name-asc">{t("name_asc")}</option>
